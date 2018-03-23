@@ -9,7 +9,7 @@
         <Col span="12">在线问诊： <i-Switch v-model="d.wz" @on-change="change"><span slot="open">开</span><span slot="close">关</span></i-Switch></Col>
       </Row>
       <div class="araB">
-        <h3>服务统计<small>（已完成）</small><DatePicker type="month" placeholder="请选择查看月份" style="width: 160px;float: right" :editable=false :transfer=true size="small" :options="options"></DatePicker></h3>
+        <h3>服务统计<small>（已完成）</small><DatePicker type="month" placeholder="请选择查看月份" style="width: 160px;float: right" placement="bottom-end" :editable=false :transfer=true size="small" :options="options"></DatePicker></h3>
         <div>电话预约：12次</div>
         <div>视频预约：12次</div>
         <div>在线问诊：12次</div>
