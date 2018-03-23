@@ -19,7 +19,7 @@
 
 <script>
   export default {
-    name: 'info',
+    name: 'z_info',
     data() {
       return {
         d: {

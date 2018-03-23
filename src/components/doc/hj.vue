@@ -56,7 +56,7 @@
           } else if(data.status == '审核中') {
             type = 2;
           } else if(data.status == '已通过') {
-            type = 2;
+            type = 3;
           }
           this.$router.push({path: '/posthj/'+type, query: {data: data}})
         },

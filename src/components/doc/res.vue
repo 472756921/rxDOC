@@ -2,14 +2,24 @@
   <div>
     <Table :columns="columns1" :data="data1" @on-row-click="datile"></Table>
     <Page :current="1" :total="50" size="small" style="text-align: center; margin-top: .4rem"></Page>
+    <Modal v-model="closeQ" title="确认关闭" :closable="false" :mask-closable="false" @on-ok="closeQues">
+      <p slot="header" style="text-align:center;color: #f60;">结束服务</p>
+      <div>您要结束这条服务吗？</div>
+    </Modal>
   </div>
 </template>
 
 <script>
     export default {
       name: 'res',
+      created() {
+        this.type = sessionStorage.getItem('type');
+      },
       data() {
         return {
+          type: 1,
+          closeQ: false,
+          tempID: '',
           columns1: [
             {title: '宝宝名',key: 'name'},
             {title: '类型',key: 'type'},
@@ -35,9 +45,18 @@
         };
       },
       methods: {
+        closeQues() {
+
+        },
         datile(data, index) {
+          if (this.type == 1 && data.status == '未完成') {
+            if(data.type != '在线咨询') {
+              this.tempID = data.id;
+              this.closeQ = true;
+            }
+          }
           if(data.type == '在线咨询') {
-            this.$router.push({path: '/chat/'+data.id, query: {data: data}})
+            this.$router.push({path: '/chat/'+data.id, query: {data: data, type: this.type}})
           }
         },
       },

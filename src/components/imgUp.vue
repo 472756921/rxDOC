@@ -96,7 +96,6 @@
       }
     },
     mounted () {
-      console.log(this.type);
       this.uploadList = this.$refs.upload.fileList;
     }
   }

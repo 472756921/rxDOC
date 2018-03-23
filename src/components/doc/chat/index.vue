@@ -6,13 +6,14 @@
         <Col span="8">{{title}}</Col>
         <Col span="8" style="text-align: right">
           <span style="color: #00c000" v-if="isOver">已完成</span>
-          <Button type="error" v-if="!isOver" @click="closeQ=true" size="small">结束问答</Button>
+          <Button type="error" v-if="!isOver&&type==2" @click="closeQ=true" size="small">结束问答</Button>
+          <span v-if="type==1&&!isOver" style="color:red;">未完成</span>
         </Col>
       </Row>
     </div>
 
     <div class="content" id="ccon">
-      <textCon v-for="(it, i) in chat" :key="i" :data="it"/>
+      <textCon v-for="(it, i) in chat" :key="i" :data="it" :userType="type"/>
     </div>
 
     <div class="option">
@@ -44,6 +45,7 @@
     components: {textCon},
     data() {
       return {
+        type: 1,
         isOver: false,
         showF: false,
         closeQ: false,
@@ -51,7 +53,7 @@
         title: '',
         text: '',
         images: '',
-        //1  user  2 doc    3  acc
+        //1acc  2doc
         chat: [
           {message: 'sdfasdfasdfasd', date: '2012-12-12 02:30', type: 1},
           {message: 'asdfeqwerqwer', date: '2012-12-12 12:30', type: 1},
@@ -77,6 +79,7 @@
     created() {
       const data = this.$route.query.data;
       this.title = data.name;
+      this.type = this.$route.query.type;
       this.isOver = data.status=='已完成'?true:false;
     },
     mounted() {
@@ -98,7 +101,7 @@
         if(this.text == '') {
           return false;
         }
-        this.chat.push({message: this.text, date: this.getNowFormatDate(), type: 2});
+        this.chat.push({message: this.text, date: this.getNowFormatDate(), type: this.type});
         this.text = '';
       },
       imgSelect() {
@@ -118,7 +121,7 @@
         reader.readAsDataURL(files);
         reader.onloadend = (res) => {
           const re = res.target.result;
-          this.dealImage(re, {width: 500}, (data)=>{this.chat.push({message: '<img src="'+data+'" style="width: 100%" onClick="showIMG(this)"/>', date: this.getNowFormatDate(), type: 2});});
+          this.dealImage(re, {width: 500}, (data)=>{this.chat.push({message: '<img src="'+data+'" style="width: 100%" onClick="showIMG(this)"/>', date: this.getNowFormatDate(), type: this.type});});
           window.showIMG = (data) => {
             this.showF = true;
             this.imgSrc = data.src;

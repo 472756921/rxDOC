@@ -1,20 +1,20 @@
 <template>
   <div>
-    <div class="textCon" v-if="data.type==1">
+    <div class="textCon" v-if="data.type==3">
       <div class="type">
         <div class="lid">患者：</div>
         <p v-html="data.message"></p>
         <div class="date">{{data.date}}</div>
       </div>
     </div>
-    <div class="textCon textCon3" v-if="data.type==3">
+    <div :class="userType==1?'textCon textCon2':'textCon textCon3'" v-if="data.type==1">
       <div class="type">
         <div class="lid">小助手：</div>
         <p v-html="data.message"></p>
         <div class="date">{{data.date}}</div>
       </div>
     </div>
-    <div class="textCon textCon2" v-if="data.type==2">
+    <div :class="userType==2?'textCon textCon2':'textCon textCon3'" v-if="data.type==2">
       <div class="type">
         <div class="lid">医生：</div>
         <p v-html="data.message"></p>
@@ -28,8 +28,12 @@
 <script>
     export default {
       name: 'text-con',
-      props: ['data'],
-      mounted() {
+      props: ['data', 'userType'],
+      data() {
+        return {
+          isDOC: false,
+          isACC: true,
+        };
       },
       methods: {
         showIMG(data) {

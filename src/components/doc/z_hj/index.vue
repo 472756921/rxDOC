@@ -8,29 +8,22 @@
       </div>
       <div class="content">
         <span>患教标题：</span>
-        <Input placeholder="请输入标题" v-model="d.title" style="width: 100%" :maxlength="20" :disabled="(userType==1&&(type==1||type==2||type==3))||(userType==2&&(type==2||type==3))"></Input>
+        <Input placeholder="请输入标题" v-model="d.title" style="width: 100%" :maxlength="20" :disabled="type==2"></Input>
       </div>
       <div class="content">
         <span>患教内容：</span>
-        <Input placeholder="请输入患教内容" v-model="d.content" style="width: 100%" type="textarea" :rows="6" :disabled="(userType==1&&(type==1||type==2||type==3))||(userType==2&&(type==2||type==3))"></Input>
+        <Input placeholder="请输入患教内容" v-model="d.content" style="width: 100%" type="textarea" :rows="6" :disabled="type==2"></Input>
       </div>
       <div class="content">
-        <imgup :type="type" v-if="(userType==1&&type==0)||(userType==2&&(type==0||type==1))"/>
-        <div v-if="(userType==1&&type!=0)||(userType==2&&(type!=0&&type!=1))">这里显示图片</div>
+        <imgup :type="type"/>
       </div>
       <div class="content" v-if="type==1">
         <h3 style="color: red;">您的患教文章未被通过，请修改后发布</h3>
         <p style="color: #999;">未通过原因：文章太乱，读者不懂</p>
       </div>
-      <div class="content" v-if="type==2&&userType==1">
-        <span>不通过原因：</span>
-        <Input placeholder="请输入不通过原因" v-model="resion" style="width: 100%" type="textarea" :rows="4"/>
-      </div>
       <div class="content">
         <Button type="primary" v-if="type==0" class="Sbtn" long @click="posthj">发布患教</Button>
-        <Button type="warning" v-if="type==1&&userType==2" class="Sbtn" long @click="posthj">修改患教</Button>
-        <Button type="error" v-if="type==2&&userType==1" class="Sbtn2"  @click="posthj">不通过</Button>
-        <Button type="success" v-if="type==2&&userType==1" class="Sbtn2"  @click="posthj">通过-发布</Button>
+        <Button type="warning" v-if="type==1" class="Sbtn" long @click="posthj">修改患教</Button>
       </div>
     </div>
 </template>
@@ -43,13 +36,10 @@
     name: 'index',
     created() {
       this.type = this.$route.params.type;
-      this.userType = sessionStorage.getItem('type');
     },
     data() {
       return {
-        resion: '',
         type: 0,
-        userType: 1,
         d: {
           content: '',
           title: '',
@@ -81,10 +71,6 @@
   .Sbtn{
     position: absolute;
     width: 96%;
-    bottom: 10px;
-  }
-  .Sbtn2{
-    width: 49.2%;
     bottom: 10px;
   }
 </style>

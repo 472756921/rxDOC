@@ -1,8 +1,8 @@
 <template>
-  <Tabs value="name1" class="Ben">
+  <Tabs :value="name" class="Ben" :animated="false" @on-click="change">
     <TabPane label="咨询列表" name="name1"><resList/></TabPane>
     <TabPane label="患教信息" name="name2"><hj/></TabPane>
-    <TabPane label="我的信息" name="name3"><info/></TabPane>
+    <TabPane label="我的信息" name="name3"><info v-if="type==2"/><zinfo v-if="type==1"/></TabPane>
   </Tabs>
 </template>
 
@@ -10,10 +10,29 @@
   import resList from './res';
   import hj from './hj';
   import info from './info';
+  import zinfo from './z_info';
 
   export default {
     name: 'index',
-    components: {resList, hj, info},
+    components: { resList, hj, info, zinfo },
+    data() {
+      return{
+        type: 1,
+        name: 'name1',
+      };
+    },
+    created() {
+      this.type = sessionStorage.getItem('type');
+      if(sessionStorage.getItem('Tabname') != null){
+        this.name = sessionStorage.getItem('Tabname');
+      }
+    },
+    methods: {
+      change(nd) {
+        this.name = nd;
+        sessionStorage.setItem('Tabname', nd);
+      }
+    },
   };
 </script>
 
