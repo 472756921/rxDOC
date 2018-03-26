@@ -8,11 +8,16 @@
         <Col span="12">视频预约： <i-Switch v-model="d.sp" @on-change="change"><span slot="open">开</span><span slot="close">关</span></i-Switch></Col>
         <Col span="12">在线问诊： <i-Switch v-model="d.wz" @on-change="change"><span slot="open">开</span><span slot="close">关</span></i-Switch></Col>
       </Row>
+      <div>
+        <h3>医生简介：</h3>
+        <p>这里是医生简介这里是医生简介这里是医生简介这里是医生简介这里是医生简介这里是医生简介这里是医生简介这里是医生简介这里是医生简介</p>
+      </div>
       <div class="araB">
         <h3>服务统计<small>（已完成）</small><DatePicker type="month" placeholder="请选择查看月份" style="width: 160px;float: right" placement="bottom-end" :editable=false :transfer=true size="small" :options="options"></DatePicker></h3>
-        <div>电话预约：12次</div>
-        <div>视频预约：12次</div>
-        <div>在线问诊：12次</div>
+        <div>电话预约：12次  -  ￥500.0</div>
+        <div>视频预约：12次  -  ￥500.0</div>
+        <div>在线问诊：12次  -  ￥500.0</div>
+        <div style="color: red;font-size: 14px">总收入： ￥1500.00</div>
       </div>
     </div>
 </template>

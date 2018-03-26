@@ -25,6 +25,7 @@
             {title: '类型',key: 'type'},
             {title: '联系电话',key: 'phone'},
             {title: '时间',key: 'date'},
+            {title: '医生',key: 'doc'},
             {title: '状态',key: 'status',
               render: (p, r) => {
                 if(r.row.status == '未完成') {
@@ -36,11 +37,11 @@
             },
           ],
           data1: [
-            {name: '溜溜', type: '视频预约', phone: '17782293840', date: '2012-12-12', status: '未完成', id: 12},
-            {name: '溜溜', type: '在线咨询', phone: '17782293840', date: '2012-12-12', status: '未完成', id: 12},
-            {name: '溜溜', type: '视频预约', phone: '17782293840', date: '2012-12-12', status: '已完成', id: 12},
-            {name: '溜溜', type: '电话预约', phone: '17782293840', date: '2012-12-12', status: '已完成', id: 12},
-            {name: '溜溜', type: '在线咨询', phone: '17782293840', date: '2012-12-12', status: '已完成', id: 12},
+            {name: '溜溜', type: '视频预约', phone: '17782293840', date: '2012-12-12', status: '未完成', id: 12, doc: '刘德华'},
+            {name: '溜溜', type: '在线咨询', phone: '17782293840', date: '2012-12-12', status: '未完成', id: 12, doc: '刘德华'},
+            {name: '溜溜', type: '视频预约', phone: '17782293840', date: '2012-12-12', status: '已完成', id: 12, doc: '刘德华'},
+            {name: '溜溜', type: '电话预约', phone: '17782293840', date: '2012-12-12', status: '已完成', id: 12, doc: '刘德华'},
+            {name: '溜溜', type: '在线咨询', phone: '17782293840', date: '2012-12-12', status: '已完成', id: 12, doc: '刘德华'},
           ]
         };
       },

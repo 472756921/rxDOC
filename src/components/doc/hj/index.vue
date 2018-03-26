@@ -15,6 +15,14 @@
         <Input placeholder="请输入患教内容" v-model="d.content" style="width: 100%" type="textarea" :rows="6" :disabled="(userType==1&&(type==1||type==2||type==3))||(userType==2&&(type==2||type==3))"></Input>
       </div>
       <div class="content">
+        <span>文章类型：</span>
+        <RadioGroup v-model="aClass">
+          <Radio label="原创"></Radio>
+          <Radio label="转载"></Radio>
+        </RadioGroup>
+        <Input placeholder="转载来源" v-if="aClass=='转载'" v-model="come"/>
+      </div>
+      <div class="content">
         <imgup :type="type" v-if="(userType==1&&type==0)||(userType==2&&(type==0||type==1))"/>
         <div v-if="(userType==1&&type!=0)||(userType==2&&(type!=0&&type!=1))">这里显示图片</div>
       </div>
@@ -47,6 +55,8 @@
     },
     data() {
       return {
+        come: '',
+        aClass: '原创',
         resion: '',
         type: 0,
         userType: 1,
