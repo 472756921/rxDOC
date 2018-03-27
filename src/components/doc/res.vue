@@ -10,6 +10,8 @@
 </template>
 
 <script>
+  import {getJZList} from '../../interface';
+
     export default {
       name: 'res',
       created() {
@@ -45,7 +47,22 @@
           ]
         };
       },
+      mounted() {
+        this.getData();
+      },
       methods: {
+        getData() {
+          this.$ajax({
+            method: 'get',
+            url: getJZList(),
+            dataType: 'JSON',
+            contentType: 'application/json;charset=UTF-8',
+          }).then((res) => {
+            console.log(res.data);
+          }).catch((error) => {
+            this.$Message.error('网络掉了，请您稍后');
+          });
+        },
         closeQues() {
 
         },
