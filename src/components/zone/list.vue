@@ -1,25 +1,30 @@
 <template>
   <div>
     <Table :columns="columns1" :data="data1" @on-row-click="datile"></Table>
-    <Page :current="1" :total="20" size="small" style="text-align: center; margin-top: .4rem"></Page>
+    <Page :current="pageN" :total="total" size="small" style="text-align: center; margin-top: .4rem" @on-change="pageChange"></Page>
     <Button v-if="type!=3&&utype==1" type="primary" class="Sbtn" @click="posthj">发布活动</Button>
   </div>
 </template>
 
 <script>
+  import {getAllLatestActivity, getAllActivityStyle} from '../../interface';
+
   export default {
     name: 'activity_list',
     props: ['type'],
     created() {
       this.utype = sessionStorage.getItem('type');
+      this.getData();
     },
     data() {
       return {
+        pageN: 1,
+        total: 1,
         utype: 1,
         columns1: [
           {title: '标题',key: 'title'},
-          {title: '发布者',key: 'sender'},
-          {title: '简述',key: 'da'},
+          {title: '发布者',key: 'publishName'},
+          {title: '简述',key: 'sketch'},
         ],
         data1: [
           {title: 'XXXX', da: 'XXXXXXXXXXX', id: 12, sender: 'XX'},
@@ -35,6 +40,24 @@
       },
       posthj() {
         this.$router.push({path: '/newAcitve/'+this.type});
+      },
+      pageChange(newPage) {
+        this.pageN = newPage;
+      },
+      getData() {
+        let url = getAllLatestActivity();
+        if(this.type == 2) {
+          url = getAllActivityStyle();
+        }
+
+        this.$ajax({
+          method: 'get',
+          url: url + '?size=11&page=' + this.pageN,
+        }).then((res) => {
+          this.data1 = res.data.results;
+          this.total = res.data.total;
+        }).catch((error) => {
+        });
       },
     },
   };

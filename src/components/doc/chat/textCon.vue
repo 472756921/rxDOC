@@ -1,24 +1,24 @@
 <template>
   <div>
-    <div class="textCon" v-if="data.type==3">
+    <div class="textCon" v-if="data.userType=='null'">
       <div class="type">
         <div class="lid">患者：</div>
-        <p v-html="data.message"></p>
-        <div class="date">{{data.date}}</div>
+        <p v-html="data.content"></p>
+        <div class="date">{{data.addTime}}</div>
       </div>
     </div>
-    <div :class="userType==1?'textCon textCon2':'textCon textCon3'" v-if="data.type==1">
+    <div :class="userType==1?'textCon textCon2':'textCon textCon3'" v-if="data.userType ==1">
       <div class="type">
         <div class="lid">小助手：</div>
-        <p v-html="data.message"></p>
-        <div class="date">{{data.date}}</div>
+        <p v-html="data.content"></p>
+        <div class="date">{{data.addTime}}</div>
       </div>
     </div>
-    <div :class="userType==2?'textCon textCon2':'textCon textCon3'" v-if="data.type==2">
+    <div :class="userType==2?'textCon textCon2':'textCon textCon3'" v-if="data.userType ==2">
       <div class="type">
         <div class="lid">医生：</div>
-        <p v-html="data.message"></p>
-        <div class="date">{{data.date}}</div>
+        <p v-html="data.content"></p>
+        <div class="date">{{data.addTime}}</div>
       </div>
     </div>
   </div>

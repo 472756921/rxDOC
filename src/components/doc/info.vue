@@ -1,6 +1,6 @@
 <template>
     <div class="info">
-      <h3>姓名：刘德华</h3>
+      <h3>姓名：{{ud.name}}</h3>
       <br/>
       <Row class="list">
         <Col span="12">在线状态： <i-Switch v-model="d.zx" @on-change="change"><span slot="open">开</span><span slot="close">关</span></i-Switch></Col>
@@ -10,7 +10,7 @@
       </Row>
       <div>
         <h3>医生简介：</h3>
-        <p>这里是医生简介这里是医生简介这里是医生简介这里是医生简介这里是医生简介这里是医生简介这里是医生简介这里是医生简介这里是医生简介</p>
+        <p>{{ud.remarks}}</p>
       </div>
       <div class="araB">
         <h3>服务统计<small>（已完成）</small><DatePicker type="month" placeholder="请选择查看月份" style="width: 160px;float: right" placement="bottom-end" :editable=false :transfer=true size="small" :options="options"></DatePicker></h3>
@@ -23,10 +23,16 @@
 </template>
 
 <script>
+  import {getDoctorById, saveDoctor} from '../../interface';
+
   export default {
     name: 'info',
+    created() {
+      this.getData();
+    },
     data() {
       return {
+        ud: '',
         d: {
           zx: false,
           dh: false,
@@ -42,7 +48,40 @@
     },
     methods: {
       change (status) {
-      }
+        let type = '';
+        if(this.d.wz) {
+          type += '1';
+        }
+        if(this.d.sp) {
+          type += '3';
+        }
+        if(this.d.dh) {
+          type += '2';
+        }
+        this.$ajax({
+          method: 'post',
+          data: {
+            "online": this.d.zx?1:0,
+            "type": type
+          },
+          url: saveDoctor(),
+        }).then((res) => {
+        }).catch((error) => {
+        });
+      },
+      getData() {
+        this.$ajax({
+          method: 'get',
+          url: getDoctorById(),
+        }).then((res) => {
+          this.ud = res.data
+          res.data.onLine == 0?this.d.zx = false:this.d.zx = true;
+          res.data.type.indexOf('1')!=-1?this.d.wz = true:this.d.wz = false;
+          res.data.type.indexOf('2')!=-1?this.d.dh = true:this.d.dh = false;
+          res.data.type.indexOf('3')!=-1?this.d.sp = true:this.d.sp = false;
+        }).catch((error) => {
+        });
+      },
     },
   };
 </script>

@@ -40,11 +40,13 @@
 
 <script>
   import textCon from './textCon';
+  import {getChatList} from '../../../interface';
   export default {
     name: 'chat',
     components: {textCon},
     data() {
       return {
+        docID: '',
         type: 1,
         isOver: false,
         showF: false,
@@ -53,34 +55,31 @@
         title: '',
         text: '',
         images: '',
+        total: '',
+        pageN: '',
+        cid: '',
         //1acc  2doc
-        chat: [
-          {message: 'sdfasdfasdfasd', date: '2012-12-12 02:30', type: 1},
-          {message: 'asdfeqwerqwer', date: '2012-12-12 12:30', type: 1},
-          {message: 'asdfasdfasdf', date: '2012-12-12 14:24', type: 2},
-          {message: 'asdfasdfasdf', date: '2012-12-12 14:24', type: 3},
-          {message: 'asdfasdfasdf', date: '2012-12-12 14:24', type: 3},
-          {message: 'asdfasdfasdf', date: '2012-12-12 14:24', type: 3},
-          {message: 'asdfasdfasdf', date: '2012-12-12 14:24', type: 3},
-          {message: 'asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf', date: '2012-12-12 12:30', type: 1},
-          {message: 'asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf', date: '2012-12-12 14:24', type: 2},
-          {message: 'asdfeqwerqwer', date: '2012-12-12 12:30', type: 1},
-          {message: 'asdfeqwerqwer', date: '2012-12-12 12:30', type: 1},
-          {message: 'asdfasdfasdf', date: '2012-12-12 14:24', type: 3},
-          {message: 'asdfeqwerqwer', date: '2012-12-12 12:30', type: 1},
-          {message: 'asdfeqwerqwer', date: '2012-12-12 12:30', type: 1},
-          {message: 'asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf', date: '2012-12-12 14:24', type: 2},
-          {message: 'asdfasdfasdf', date: '2012-12-12 14:24', type: 2},
-          {message: 'asdfasdfasdf', date: '2012-12-12 14:24', type: 2},
-          {message: 'asdfasdfasdf', date: '2012-12-12 14:24', type: 3},
-        ],
+        chat: [],
+        obj: {
+          data: "",
+          fileType: "",
+          id: '',
+          norImageUrl: "",
+          originalName: ""
+        },
       };
     },
     created() {
       const data = this.$route.query.data;
-      this.title = data.name;
+      this.title = data.childrenName;
+      this.docID = data.doctorId;
+      this.cid = data.id;
+      if(this.cid == undefined) {
+        this.back();
+      }
       this.type = this.$route.query.type;
-      this.isOver = data.status=='已完成'?true:false;
+      this.isOver = data.status=='2'?true:false;
+      this.getData();
     },
     mounted() {
       const h = window.screen.availHeight;
@@ -101,7 +100,23 @@
         if(this.text == '') {
           return false;
         }
-        this.chat.push({message: this.text, date: this.getNowFormatDate(), type: this.type});
+        this.$ajax({
+          method: 'post',
+          data: {
+            adminId: this.type==1?this.docID:'',
+            content: this.text,
+            customerId: '',
+            doctorConsultId: this.doctorConsultId,
+            doctorId: this.type==2?this.docID:'',
+            imageJsonList:this.obj,
+            type: this.type,
+            userType: this.userType,
+          },
+          url: 'http://118.31.38.219/admin/app/api/doctorChatCustomer/save',
+        }).then((res) => {
+        }).catch((error) => {
+        });
+        this.chat.push({content: this.text, addTime: this.getNowFormatDate(), userType: this.type});
         this.text = '';
       },
       imgSelect() {
@@ -183,6 +198,19 @@
           // 回调函数返回base64的值
           callback(base64);
         }
+      },
+      getData() {
+        this.$ajax({
+          method: 'get',
+          url: getChatList() + this.cid,
+          dataType: 'JSON',
+          contentType: 'application/json;charset=UTF-8',
+        }).then((res) => {
+          this.total = res.data.total;
+          this.chat = res.data.results;
+        }).catch((error) => {
+          this.$Message.error('网络掉了，请您稍后');
+        });
       },
     },
   };
