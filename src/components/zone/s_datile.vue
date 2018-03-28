@@ -7,21 +7,13 @@
       </Row>
     </div>
     <div class="content">
-      <div class="artTitle"><Avatar size="small" src="https://i.loli.net/2017/08/21/599a521472424.jpg" /> 刘德华</div>
-      <p>最近气温变化大，不要给宝宝急着减衣服哦，春捂秋冻</p>
+      <div class="artTitle"><Avatar size="small" :src="data.customerIcon" /> {{data.customerName}}</div>
+      <h3 style="padding: .6rem">{{data.title}}</h3>
+      <p>{{data.content}}</p>
     </div>
     <div class="content">
-      <div class="imgList">
-        <img src="http://www.bensonchen.cn:8080/pics/business/NorImages/latestactivity/2018/03/9012ccbe-a76c-414b-ae31-b37e09927727.jpg" width="100%" @click="showIMG('http://www.bensonchen.cn:8080/pics/business/NorImages/latestactivity/2018/03/9012ccbe-a76c-414b-ae31-b37e09927727.jpg')"/>
-      </div>
-      <div class="imgList">
-        <img src="http://www.bensonchen.cn:8080/pics/business/NorImages/latestactivity/2018/03/9012ccbe-a76c-414b-ae31-b37e09927727.jpg" width="100%"/>
-      </div>
-      <div class="imgList">
-        <img src="http://www.bensonchen.cn:8080/pics/business/NorImages/latestactivity/2018/03/9012ccbe-a76c-414b-ae31-b37e09927727.jpg" width="100%"/>
-      </div>
-      <div class="imgList">
-        <img src="http://www.bensonchen.cn:8080/pics/business/NorImages/latestactivity/2018/03/9012ccbe-a76c-414b-ae31-b37e09927727.jpg" width="100%"/>
+      <div class="imgList" v-for="(it, i) in data.imageJsonList" :key="i">
+        <img :src="it.norImageUrl" width="100%" @click="showIMG(it.norImageUrl)"/>
       </div>
     </div>
     <div class="content">
@@ -45,6 +37,7 @@
 
 <script>
   import cop from './cop/index';
+  import {getCustomerShareById} from '../../interface';
 
     export default {
       props: ['type'],
@@ -54,7 +47,12 @@
         return {
           showF: false,
           imgSrc: '',
+          data: '',
+          cdata: '',
         };
+      },
+      created() {
+        this.getData();
       },
       mounted() {
         let d = document.getElementById('datileID');
@@ -62,6 +60,16 @@
         d.style.minHeight = window.screen.availHeight + 'px';
       },
       methods: {
+        getData() {
+          this.$ajax({
+            method: 'get',
+            url: getCustomerShareById() + this.$route.params.id,
+          }).then((res) => {
+            this.data = res.data;
+          }).catch((error) => {
+            this.$Message.error('网络故障，获取失败');
+          });
+        },
         back() {window.history.go(-1)},
         showIMG(src) {
           this.imgSrc = src;
@@ -74,6 +82,7 @@
 <style scoped>
   .datile{
     background: #f6f6f6;
+    overflow: auto;
   }
   .title{
     font-size: 14px;

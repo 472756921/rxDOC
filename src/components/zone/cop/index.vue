@@ -12,16 +12,16 @@
         </Row>
       </div>
       <div class="orther">
-        <div class="pil">
+        <div class="pil" v-for="(it, i) in cdata">
           <Row>
-            <Col span="3"><Avatar src="https://i.loli.net/2017/08/21/599a521472424.jpg" /></Col>
+            <Col span="3"><Avatar :src="it.customerIcon" /></Col>
             <Col span="21">
-              <div style="color: #666;">liudehua</div>
-              <div>XXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
+              <div style="color: #666;">{{it.customerName}} <span v-if="it.replyCustomerName!=''" style="color: #aaaaaa;"> 回复：{{it.replyCustomerName}}</span></div>
+              <div>{{it.content}}</div>
               <div style="color: #ccc;font-size: 12px">
-                <span v-if="!isB">刚刚</span>
-                <input v-model="bcp" v-if="isB" size="small" autofocus="autofocus" placeholder="说说你的看法" @blur="backS" class="rebackInput"></input>
-                <span style="float: right;color:#19be6b;" @click="backS">{{baText}}</span>
+                <span>{{it.addTime}}</span>
+                <input v-model="bcp" v-if="isB&&showI==i" size="small" autofocus="autofocus" placeholder="说说你的看法" @blur="backS" class="rebackInput"></input>
+                <span style="float: right;color:#19be6b;" @click="backS(i)">{{baText}}</span>
               </div>
             </Col>
           </Row>
@@ -31,6 +31,7 @@
 </template>
 
 <script>
+  import {getAllCustomerShareComment} from '../../../interface';
     export default {
       name: 'index',
       data() {
@@ -38,12 +39,28 @@
           cp: '',
           isB: false,
           bcp: '',
+          cdata: '',
           baText: '回复',
+          showI: '',
         };
+      },
+      mounted() {
+        this.getData();
       },
       methods: {
         posthj() {},
-        backS() {
+        getData() {
+          this.$ajax({
+            method: 'get',
+            url: getAllCustomerShareComment() + this.$route.params.id,
+          }).then((res) => {
+            this.cdata = res.data.results;
+          }).catch((error) => {
+            this.$Message.error('网络故障，获取失败');
+          });
+        },
+        backS(i) {
+          this.showI = i;
           if(this.baText == '回复'){
             this.baText = '发送';
             this.isB = true;

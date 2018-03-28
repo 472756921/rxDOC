@@ -6,40 +6,46 @@
 </template>
 
 <script>
-
+import {getAllChildrenGrowRecord} from '../../../interface';
   export default {
     name: 'growthList',
     data() {
       return {
         columns1: [
           {
-            title: '月龄',
-            key: 'age'
+            title: '测量时间',
+            key: 'measurementTime'
           },
           {
-            title: '身高',
-            key: 'sg'
+            title: '身高(cm)',
+            key: 'height'
           },
           {
-            title: '体重',
-            key: 'tz'
+            title: '体重(kg)',
+            key: 'weight'
           },
           {
-            title: '头围',
-            key: 'tw'
+            title: '头围(cm)',
+            key: 'headCircumference'
           }
         ],
-        data1: [
-          {
-            age: '6岁11个月23天',
-            sg: '43CM',
-            tz: '4KG',
-            tw: '12CM',
-          },
-        ]
+        data1: []
       };
     },
+    created() {
+      this.getData();
+    },
     methods: {
+      getData() {
+        this.$ajax({
+          method: 'get',
+          url: getAllChildrenGrowRecord() + this.$route.params.id,
+        }).then((res) => {
+          this.data1 = res.data.results;
+        }).catch((error) => {
+          this.$Message.error('网络出错，请稍后再试');
+        });
+      }
     },
   };
 </script>

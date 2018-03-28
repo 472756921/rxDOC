@@ -9,59 +9,66 @@
 </template>
 
 <script>
-    export default {
-      name: 'hj',
-      mounted() {
-      },
-      data() {
-        return {
-          columns1: [
-            {title: '名称',key: 'name'},
-            {title: '提交时间',key: 'date'},
-            {title: '发布者',key: 'user'},
-            {title: '状态',key: 'status',
-              render: (p, r) => {
-                if(r.row.status == '未通过') {
-                  return <div style='color: red'>未通过</div>
-                } else if(r.row.status == '已通过') {
-                  return <div style='color: green'>已通过</div>
-                } else if(r.row.status == '审核中') {
-                  return <div style='color: orange'>审核中</div>
-                }
+  import {getAllPatientEducation} from '../../interface';
+
+  export default {
+    name: 'hj',
+    mounted() {
+      this.getData();
+    },
+    data() {
+      return {
+        columns1: [
+          {title: '名称',key: 'title'},
+          {title: '提交时间',key: 'addTime'},
+          {title: '发布者',key: 'name'},
+          {title: '状态',key: 'status',
+            render: (p, r) => {
+              if(r.row.status == '2') {
+                return <div style='color: red'>未通过</div>
+              } else if(r.row.status == '1') {
+                return <div style='color: green'>已通过</div>
+              } else if(r.row.status == '0') {
+                return <div style='color: orange'>审核中</div>
               }
-            },
-          ],
-          data1: [
-            {name: '溜溜', date: '2012-12-12', status: '未通过', user: 'xxx'},
-            {name: '溜溜', date: '2012-12-12', status: '未通过', user: 'xxx'},
-            {name: '溜溜', date: '2012-12-12', status: '审核中', user: 'xxx'},
-            {name: '溜溜', date: '2012-12-12', status: '已通过', user: 'xxx'},
-            {name: '溜溜', date: '2012-12-12', status: '已通过', user: 'xxx'},
-            {name: '溜溜', date: '2012-12-12', status: '已通过', user: 'xxx'},
-            {name: '溜溜', date: '2012-12-12', status: '已通过', user: 'xxx'},
-            {name: '溜溜', date: '2012-12-12', status: '已通过', user: 'xxx'},
-            {name: '溜溜', date: '2012-12-12', status: '已通过', user: 'xxx'},
-            {name: '溜溜', date: '2012-12-12', status: '已通过', user: 'xxx'},
-          ]
-        };
+            }
+          },
+        ],
+        data1: [],
+        pageN: 1,
+        total: '',
+      };
+    },
+    methods: {
+      posthj() {
+        this.$router.push({path: 'posthj/0'});
       },
-      methods: {
-        posthj() {
-          this.$router.push({path: 'posthj/0'});
-        },
-        datile(data, index) {
-          let type = 1;
-          if(data.status == '未通过') {
-            type = 1;
-          } else if(data.status == '审核中') {
-            type = 2;
-          } else if(data.status == '已通过') {
-            type = 3;
-          }
-          this.$router.push({path: '/posthj/'+type, query: {data: data}})
-        },
+      datile(data, index) {
+        let type = 1;
+        if(data.status == '2') {
+          type = 1;
+        } else if(data.status == '0') {
+          type = 2;
+        } else if(data.status == '1') {
+          type = 3;
+        }
+        this.$router.push({path: '/posthj/'+type, query: {data: data}})
       },
-    };
+      getData() {
+        this.$ajax({
+          method: 'get',
+          url: getAllPatientEducation() + this.pageN,
+          dataType: 'JSON',
+          contentType: 'application/json;charset=UTF-8',
+        }).then((res) => {
+          this.total = res.data.total;
+          this.data1 = res.data.results;
+        }).catch((error) => {
+          this.$Message.error('网络掉了，请您稍后');
+        });
+      },
+    },
+  };
 </script>
 
 <style scoped>

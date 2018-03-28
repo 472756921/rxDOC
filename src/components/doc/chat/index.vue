@@ -40,7 +40,7 @@
 
 <script>
   import textCon from './textCon';
-  import {getChatList} from '../../../interface';
+  import {getChatList, doctorChatCustomersave, uploadImg, overDoctorConsult} from '../../../interface';
   export default {
     name: 'chat',
     components: {textCon},
@@ -60,13 +60,7 @@
         cid: '',
         //1acc  2doc
         chat: [],
-        obj: {
-          data: "",
-          fileType: "",
-          id: '',
-          norImageUrl: "",
-          originalName: ""
-        },
+        imgDate: '',
       };
     },
     created() {
@@ -80,6 +74,10 @@
       this.type = this.$route.query.type;
       this.isOver = data.status=='2'?true:false;
       this.getData();
+      window.showIMG = (data) => {
+        this.showF = true;
+        this.imgSrc = data.src;
+      }
     },
     mounted() {
       const h = window.screen.availHeight;
@@ -102,28 +100,37 @@
         }
         this.$ajax({
           method: 'post',
-          data: {
-            adminId: this.type==1?this.docID:'',
-            content: this.text,
-            customerId: '',
-            doctorConsultId: this.doctorConsultId,
-            doctorId: this.type==2?this.docID:'',
-            imageJsonList:this.obj,
-            type: this.type,
-            userType: this.userType,
+          data:{
+            "adminId": this.type==1?6:'',
+            "content": this.text,
+            "customerId": '',
+            "doctorConsultId": this.cid,
+            "doctorId": this.type==2?this.docID:'',
+            "imageUrl": '',
+            "type": this.type,
+            "userType":this.type,
           },
-          url: 'http://118.31.38.219/admin/app/api/doctorChatCustomer/save',
+          url: doctorChatCustomersave(),
         }).then((res) => {
+          this.chat.push({content: this.text, addTime: this.getNowFormatDate(), userType: this.type});
+          this.text = '';
         }).catch((error) => {
+          this.$Message.error('网络错误，请稍后再试');
         });
-        this.chat.push({content: this.text, addTime: this.getNowFormatDate(), userType: this.type});
-        this.text = '';
       },
       imgSelect() {
         document.getElementById('files').click();
       },
       closeQues() {
-        this.isOver = true;
+        this.$ajax({
+          method: 'get',
+          url: overDoctorConsult() +  this.cid,
+        }).then((res) => {
+          this.isOver = true;
+          this.$Message.success('问答成功关闭');
+        }).catch((error) => {
+          this.$Message.error('网络错误，请稍后再试');
+        });
       },
       back() {window.history.go(-1)},
       imgsend() {
@@ -132,15 +139,47 @@
           this.$Message.error('请选择图片文件');
           return false;
         }
+        let formData = new FormData();
+        formData.append('file', files);
         let reader = new FileReader();
         reader.readAsDataURL(files);
         reader.onloadend = (res) => {
           const re = res.target.result;
-          this.dealImage(re, {width: 500}, (data)=>{this.chat.push({message: '<img src="'+data+'" style="width: 100%" onClick="showIMG(this)"/>', date: this.getNowFormatDate(), type: this.type});});
-          window.showIMG = (data) => {
-            this.showF = true;
-            this.imgSrc = data.src;
-          }
+          this.$ajax({
+            method: 'post',
+            url: uploadImg(),
+            contentType : false,
+            processData : false,
+            async:false,
+            dataType: 'JSON',
+            data: formData,
+          }).then((res) => {
+            this.$ajax({
+              method: 'post',
+              data:{
+                "adminId": this.type==1?6:'',
+                "content": '',
+                "customerId": '',
+                "doctorConsultId": this.cid,
+                "doctorId": this.type==2?this.docID:'',
+                "imageUrl": res.data.data.norImageUrl,
+                "type": this.type,
+                "userType":this.type,
+              },
+              url: doctorChatCustomersave(),
+            }).then((res) => {
+              this.dealImage(re, {width: 500}, (data)=>{this.chat.push({content: '<img src="'+data+'" style="width: 100%" onClick="showIMG(this)"/>', addTime: this.getNowFormatDate(), userType: this.type});});
+              window.showIMG = (data) => {
+                this.showF = true;
+                this.imgSrc = data.src;
+              }
+            }).catch((error) => {
+              this.$Message.error('网络错误，请稍后再试');
+            });
+
+          }).catch((error) => {
+            this.$Message.error('网络掉了，请您稍后');
+          });
         }
       },
       getNowFormatDate() {

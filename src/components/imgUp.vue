@@ -5,7 +5,7 @@
       <template v-if="item.status === 'finished'">
         <img :src="item.url">
         <div class="demo-upload-list-cover">
-          <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
+          <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
           <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
         </div>
       </template>
@@ -26,14 +26,14 @@
       :before-upload="handleBeforeUpload"
       multiple
       type="drag"
-      action="//jsonplaceholder.typicode.com/posts/"
+      action="http://118.31.38.219/admin/app/api/base/uploadImg"
       style="display: inline-block;width:58px;">
       <div style="width: 58px;height:58px;line-height: 58px;">
         <Icon type="camera" size="20"></Icon>
       </div>
     </Upload>
     <Modal title="View Image" v-model="visible">
-      <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%">
+      <img :src="this.imgName" v-if="visible" style="width: 100%">
     </Modal>
   </div>
 </template>
@@ -43,14 +43,10 @@
     data () {
       return {
         defaultList: [
-          {
-            'name': 'a42bdcc1178e62b4694c830f028db5c0',
-            'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
-          },
-          {
-            'name': 'bc7521e033abdd1e92222d733590f104',
-            'url': 'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar'
-          }
+          // {
+          //   'name': 'a42bdcc1178e62b4694c830f028db5c0',
+          //   'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
+          // },
         ],
         imgName: '',
         visible: false,
@@ -58,8 +54,8 @@
       }
     },
     methods: {
-      handleView (name) {
-        this.imgName = name;
+      handleView (url) {
+        this.imgName = url;
         this.visible = true;
       },
       handleRemove (file) {
@@ -67,8 +63,9 @@
         this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
       },
       handleSuccess (res, file) {
-        file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
-        file.name = '7eb99afb9d5f317c912f08b5212fd69a';
+        file.url = res.data.norImageUrl;
+        file.name = res.data.fileName;
+        this.$emit('handleSuccessc',res.data);
       },
       handleFormatError (file) {
         this.$Notice.warning({

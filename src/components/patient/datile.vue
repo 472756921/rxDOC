@@ -8,18 +8,18 @@
     </div>
     <Tabs :animated="false" >
       <TabPane label="医疗信息" name="name1"></TabPane>
-      <TabPane label="生长监控" name="name2"><growthMonitoring/></TabPane>
+      <TabPane label="生长监控" name="name2"><growthList/></TabPane>
       <TabPane label="自查结果" name="name3"></TabPane>
     </Tabs>
   </div>
 </template>
 
 <script>
-  import growthMonitoring from './datile/growthMonitoring';
+  import growthList from './datile/growthList';
 
     export default {
       name: 'datile',
-      components: {growthMonitoring},
+      components: {growthList},
       data() {
         return {
           a: '',

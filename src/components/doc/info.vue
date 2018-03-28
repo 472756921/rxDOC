@@ -13,17 +13,17 @@
         <p>{{ud.remarks}}</p>
       </div>
       <div class="araB">
-        <h3>服务统计<small>（已完成）</small><DatePicker type="month" placeholder="请选择查看月份" style="width: 160px;float: right" placement="bottom-end" :editable=false :transfer=true size="small" :options="options"></DatePicker></h3>
-        <div>电话预约：12次  -  ￥500.0</div>
-        <div>视频预约：12次  -  ￥500.0</div>
-        <div>在线问诊：12次  -  ￥500.0</div>
-        <div style="color: red;font-size: 14px">总收入： ￥1500.00</div>
+        <h3>服务统计<small>（已完成）</small><DatePicker type="month" v-model="date" placeholder="请选择查看月份" style="width: 160px;float: right" placement="bottom-end" :editable=false :transfer=true size="small" @on-change="dateChange" :options="options"></DatePicker></h3>
+        <div>电话预约：{{st.phoneNum}}次  -  ￥{{st.phoneNum * st.phonePrice}}</div>
+        <div>视频预约：{{st.videoNum}}次  -  ￥{{st.videoNum * st.videoPrice}}</div>
+        <div>在线问诊：{{st.onlineNum}}次  -  ￥{{st.onlineNum * st.onlinePrice}}</div>
+        <div style="color: red;font-size: 14px">总收入： ￥{{st.total}}</div>
       </div>
     </div>
 </template>
 
 <script>
-  import {getDoctorById, saveDoctor} from '../../interface';
+  import {getDoctorById, saveDoctor, getServiceNum} from '../../interface';
 
   export default {
     name: 'info',
@@ -33,11 +33,17 @@
     data() {
       return {
         ud: '',
+        date: '2018-01',
         d: {
           zx: false,
           dh: false,
           sp: false,
           wz: false,
+        },
+        st: {
+          onlineNum: 0,
+          phoneNum: 0,
+          videoNum: 0,
         },
         options: {
           disabledDate (date) {
@@ -69,6 +75,10 @@
         }).catch((error) => {
         });
       },
+      dateChange(date) {
+        this.date = date;
+        this.getServiceT();
+      },
       getData() {
         this.$ajax({
           method: 'get',
@@ -80,8 +90,20 @@
           res.data.type.indexOf('2')!=-1?this.d.dh = true:this.d.dh = false;
           res.data.type.indexOf('3')!=-1?this.d.sp = true:this.d.sp = false;
         }).catch((error) => {
+          this.$Message.error('网络故障，无法获取');
         });
+        this.getServiceT();
       },
+      getServiceT() {
+        this.$ajax({
+          method: 'get',
+          url: getServiceNum() + this.date,
+        }).then((res) => {
+          this.st = res.data;
+        }).catch((error) => {
+          this.$Message.error('网络故障，无法获取');
+        });
+      }
     },
   };
 </script>

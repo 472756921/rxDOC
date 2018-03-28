@@ -4,6 +4,7 @@
       <div class="type">
         <div class="lid">患者：</div>
         <p v-html="data.content"></p>
+        <img v-if="data.pic!=''" :src="data.pic" width="100%" onClick="showIMG(this)"/>
         <div class="date">{{data.addTime}}</div>
       </div>
     </div>
@@ -11,6 +12,7 @@
       <div class="type">
         <div class="lid">小助手：</div>
         <p v-html="data.content"></p>
+        <img v-if="data.pic!=''" :src="data.pic" width="100%" onClick="showIMG(this)"/>
         <div class="date">{{data.addTime}}</div>
       </div>
     </div>
@@ -18,6 +20,7 @@
       <div class="type">
         <div class="lid">医生：</div>
         <p v-html="data.content"></p>
+        <img v-if="data.pic!=''" :src="data.pic" width="100%" onClick="window.showIMG(this)"/>
         <div class="date">{{data.addTime}}</div>
       </div>
     </div>

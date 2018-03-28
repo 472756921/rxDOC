@@ -26,7 +26,8 @@
           {title: '发布者',key: 'publishName'},
           {title: '简述',key: 'sketch',
             render: (p, r)=>{
-              console.log(r.row.sketch);
+              let d = r.row.sketch.slice(0, 14) + '...'
+              return <span>{d}</span>
             }
           },
         ],

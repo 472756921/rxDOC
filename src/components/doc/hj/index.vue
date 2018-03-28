@@ -11,24 +11,28 @@
         <Input placeholder="请输入标题" v-model="d.title" style="width: 100%" :maxlength="20" :disabled="(userType==1&&(type==1||type==2||type==3))||(userType==2&&(type==2||type==3))"></Input>
       </div>
       <div class="content">
+        <span>患教简述：</span>
+        <Input placeholder="请输入患教内容" v-model="d.sketch" style="width: 100%" type="textarea" :rows="4" :disabled="(userType==1&&(type==1||type==2||type==3))||(userType==2&&(type==2||type==3))"></Input>
         <span>患教内容：</span>
-        <Input placeholder="请输入患教内容" v-model="d.content" style="width: 100%" type="textarea" :rows="6" :disabled="(userType==1&&(type==1||type==2||type==3))||(userType==2&&(type==2||type==3))"></Input>
+        <Input placeholder="请输入患教内容" v-model="d.details" style="width: 100%" type="textarea" :rows="6" :disabled="(userType==1&&(type==1||type==2||type==3))||(userType==2&&(type==2||type==3))"></Input>
       </div>
       <div class="content">
         <span>文章类型：</span>
-        <RadioGroup v-model="aClass">
-          <Radio label="原创"></Radio>
-          <Radio label="转载"></Radio>
+        <RadioGroup v-model="d.type">
+          <Radio label='1' :disabled="(userType==1&&(type==1||type==2||type==3))||(userType==2&&(type==2||type==3))">原创</Radio>
+          <Radio label='2' :disabled="(userType==1&&(type==1||type==2||type==3))||(userType==2&&(type==2||type==3))">转载</Radio>
         </RadioGroup>
-        <Input placeholder="转载来源" v-if="aClass=='转载'" v-model="come"/>
+        <Input placeholder="转载来源" v-if="d.type=='2'" v-model="d.resource" :disabled="(userType==1&&(type==1||type==2||type==3))||(userType==2&&(type==2||type==3))"/>
       </div>
       <div class="content">
-        <imgup :type="type" v-if="(userType==1&&type==0)||(userType==2&&(type==0||type==1))"/>
-        <div v-if="(userType==1&&type!=0)||(userType==2&&(type!=0&&type!=1))">这里显示图片</div>
+        <imgup :type="type" v-if="(userType==1&&type==0)||(userType==2&&(type==0||type==1))" @handleSuccessc="fpsuccess"/>
+        <div v-if="(userType==1&&type!=0)||(userType==2&&(type!=0&&type!=1))">
+          <img :src="it.norImageUrl" style="width: 100%" v-for="(it, i) in d.imageList" :key="i"/>
+        </div>
       </div>
       <div class="content" v-if="type==1">
         <h3 style="color: red;">您的患教文章未被通过，请修改后发布</h3>
-        <p style="color: #999;">未通过原因：文章太乱，读者不懂</p>
+        <p style="color: #999;">{{this.d.notPassRemarks}}</p>
       </div>
       <div class="content" v-if="type==2&&userType==1">
         <span>不通过原因：</span>
@@ -45,6 +49,7 @@
 
 <script>
   import imgup from '../../imgUp';
+  import {getPatientEducationById, patientEducationSave} from '../../../interface';
 
   export default {
     components: {imgup},
@@ -52,6 +57,9 @@
     created() {
       this.type = this.$route.params.type;
       this.userType = sessionStorage.getItem('type');
+      if(this.type != 0) {
+        this.getData();
+      }
     },
     data() {
       return {
@@ -61,15 +69,56 @@
         type: 0,
         userType: 1,
         d: {
-          content: '',
-          title: '',
+          details:"",
+          id:'',
+          resource:'',
+          imageList:[],
+          linkAddress:"",
+          notPassRemarks:"",
+          sketch:"",
+          status: 0,
+          title:"",
+          type: 0,
         }
       };
     },
     methods: {
       back() {window.history.go(-1)},
+      getData() {
+        this.$ajax({
+          method: 'get',
+          url: getPatientEducationById() + this.$route.query.data.id,
+          dataType: 'JSON',
+          contentType: 'application/json;charset=UTF-8',
+        }).then((res) => {
+          this.d = res.data;
+          this.d.type = this.d.type + '';
+        }).catch((error) => {
+          this.$Message.error('网络掉了，请您稍后');
+        });
+      },
+      fpsuccess(data) {
+        this.d.imageList.push(data.id);
+      },
       posthj() {
+        if(this.userType == 1) {
+          this.d.status = 1;
+        } else if(this.userType == 2) {
+          this.d.status = 0;
+        }
 
+        this.$ajax({
+          method: 'post',
+          url: patientEducationSave(),
+          dataType: 'JSON',
+          data: this.d,
+          contentType: 'application/json;charset=UTF-8',
+        }).then((res) => {
+          this.$Message.success('提交成功');
+          setTimeout(()=>{this.back()}, 1000)
+        }).catch((error) => {
+          this.$Message.error('网络掉了，请您稍后');
+        });
       },
     },
   };
