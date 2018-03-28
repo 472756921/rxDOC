@@ -18,3 +18,9 @@ export const getAllLatestActivity = () => {
 export const getAllActivityStyle = () => {
   return host + 'activityStyle/getAllActivityStyle';
 }
+export const getLatestActivityById = () => {
+  return host + 'latestActivity/getLatestActivityById?id=';
+}
+export const getActivityStyleById = () => {
+  return host + 'activityStyle/getActivityStyleById?id=';
+}

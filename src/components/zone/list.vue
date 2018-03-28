@@ -24,14 +24,13 @@
         columns1: [
           {title: '标题',key: 'title'},
           {title: '发布者',key: 'publishName'},
-          {title: '简述',key: 'sketch'},
+          {title: '简述',key: 'sketch',
+            render: (p, r)=>{
+              console.log(r.row.sketch);
+            }
+          },
         ],
-        data1: [
-          {title: 'XXXX', da: 'XXXXXXXXXXX', id: 12, sender: 'XX'},
-          {title: 'XXXX', da: 'XXXXXXXXXXX', id: 12, sender: 'XX'},
-          {title: 'XXXX', da: 'XXXXXXXXXXX', id: 12, sender: 'XX'},
-          {title: 'XXXX', da: 'XXXXXXXXXXX', id: 12, sender: 'XX'}
-        ],
+        data1: [],
       };
     },
     methods: {
@@ -49,7 +48,6 @@
         if(this.type == 2) {
           url = getAllActivityStyle();
         }
-
         this.$ajax({
           method: 'get',
           url: url + '?size=11&page=' + this.pageN,

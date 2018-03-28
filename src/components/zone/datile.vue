@@ -7,24 +7,50 @@
       </Row>
     </div>
     <div class="content">
-      <div class="artTitle">【蕊心健康课堂】孩子发烧宝爸宝妈如何应对？蕊心医生30分钟全解读！</div>
-      <p>
-        （1）课程简介：正值冬春交替时节，咨询宝贝发热的宝妈越来越多，由此蕊心儿科邀请张碧云医生为大家带来处理孩子发烧的有效方法。<br/>（2）主讲人：广州医科大学附属第一医院儿科主治医师&nbsp;张碧云&nbsp;<br/>（3）课程时间：2018年3月27日&nbsp;&nbsp;16：00<br/>（4）报名方式：扫描图片二维码即可报名，赶快邀请您身边的宝妈参与吧！<br/>&nbsp;蕊心儿科，您身边专业的儿科咨询平台。
-      </p>
-    </div>
-    <div class="content">
       <div class="imgList">
-        <img src="http://www.bensonchen.cn:8080/pics/business/NorImages/latestactivity/2018/03/9012ccbe-a76c-414b-ae31-b37e09927727.jpg" width="100%"/>
+        <img v-for="(it, i) in data.imageJsonList" :src="it.norImageUrl" :key="i" width="100%"/>
       </div>
     </div>
+    <div class="content">
+      <div class="artTitle">{{data.title}}</div>
+      <div class="per">{{data.sketch}}</div>
+      <p v-html="data.content"></p>
+    </div>
+    <div class="content" style="padding: .6rem; color: #999">活动时间：{{data.startTime}} ~ {{data.endTime}}</div>
+    <div class="content" style="padding: .6rem; color: #999">名额：{{data.num==-1?'不限':data.num}}</div>
   </div>
 </template>
 
 <script>
+  import {getLatestActivityById, getActivityStyleById} from '../../interface';
     export default {
-      props: ['type'],
       name: 'datile',
+      created() {
+        this.mID = this.$route.params.id;
+        this.type = this.$route.query.type
+        this.getData();
+      },
+      data() {
+        return {
+          mID: '',
+          data: '',
+        }
+      },
       methods: {
+        getData() {
+          let url = getLatestActivityById();
+          if(this.type == 2) {
+            url = getActivityStyleById();
+          }
+          this.$ajax({
+            method: 'get',
+            url: url + this.mID,
+          }).then((res) => {
+            this.data = res.data;
+          }).catch((error) => {
+            this.$Message.error('网络故障，获取失败');
+          });
+        },
         back() {window.history.go(-1)},
       },
     };
@@ -52,5 +78,9 @@
     line-height: 1.8rem;
     font-size: 14px;
     padding: .6rem;
+  }
+  .per{
+    padding: .6rem;
+    color: #666;
   }
 </style>
