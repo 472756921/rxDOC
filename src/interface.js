@@ -60,3 +60,24 @@ export const overDoctorConsult = () => {
 export const patientEducationSave = () => {
   return host + 'patientEducation/save';
 }
+export const loginDoctor = () => {
+  return host + 'wechat/loginDoctor';
+}
+export const loginZuShou = () => {
+  return host + 'wechat/loginZuShou';
+}
+export const doctorAll = () => {
+  return host + 'doctor/doctorAll';
+}
+export const getUserInfo = () => {
+  return host + 'wechat/getUserInfo';
+}
+export const getDoctorIdDetail = () => {
+  return host + 'doctor/getDoctorIdDetail?id=';
+}
+export const latestActivitysave = () => {
+  return host + 'latestActivity/save';
+}
+export const activityStylesave = () => {
+  return host + 'activityStyle/save';
+}

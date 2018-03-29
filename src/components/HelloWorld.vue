@@ -9,6 +9,8 @@
 </template>
 
 <script>
+  import {loginZuShou, loginDoctor} from '../interface';
+
 export default {
   name: 'HelloWorld',
   data () {
@@ -18,7 +20,18 @@ export default {
   },
   methods: {
     sure() {
-      sessionStorage.setItem('type', this.animal);
+      let URL = this.animal==1?loginZuShou():loginDoctor();
+      this.$ajax({
+        method: 'get',
+        url: URL,
+        dataType: 'JSON',
+        contentType: 'application/json;charset=UTF-8',
+      }).then((res) => {
+        sessionStorage.setItem('type', this.animal);
+        this.$Message.success('OK');
+      }).catch((error) => {
+        this.$Message.error('网络掉了，请您稍后');
+      });
     },
   },
 }

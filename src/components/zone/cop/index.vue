@@ -2,7 +2,7 @@
     <div class="cop">
       <div class="my">
         <Row>
-          <Col span="3"><Avatar src="https://i.loli.net/2017/08/21/599a521472424.jpg" /></Col>
+          <Col span="3"><Avatar style="color: #f56a00;background-color: #fde3cf">User</Avatar></Col>
           <Col span="17">
             <Input v-model="cp" placeholder="说说你的看法" style="width: 95%; background: #eee"></Input>
           </Col>

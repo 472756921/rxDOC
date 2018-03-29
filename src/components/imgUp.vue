@@ -53,7 +53,19 @@
         uploadList: [],
       }
     },
+    mounted() {
+      // this.uploadList = this.$refs.upload.fileList;
+    },
     methods: {
+      newIMGDate(data) {
+        let time = data.length * 100;
+        if(this.type == 1) {
+          data.map((it)=>{
+            this.defaultList.push({name: 'asdfsaxdsiu', url: it.norImageUrl});
+          })
+        }
+        setTimeout(()=> {this.uploadList = this.$refs.upload.fileList;}, time);
+      },
       handleView (url) {
         this.imgName = url;
         this.visible = true;
@@ -92,9 +104,6 @@
         return check;
       }
     },
-    mounted () {
-      this.uploadList = this.$refs.upload.fileList;
-    }
   }
 </script>
 <style>

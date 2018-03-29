@@ -25,7 +25,7 @@
         <Input placeholder="转载来源" v-if="d.type=='2'" v-model="d.resource" :disabled="(userType==1&&(type==1||type==2||type==3))||(userType==2&&(type==2||type==3))"/>
       </div>
       <div class="content">
-        <imgup :type="type" v-if="(userType==1&&type==0)||(userType==2&&(type==0||type==1))" @handleSuccessc="fpsuccess"/>
+        <imgup :type="type" v-if="(userType==1&&type==0)||(userType==2&&(type==0||type==1))" ref="imgC" @handleSuccessc="fpsuccess"/>
         <div v-if="(userType==1&&type!=0)||(userType==2&&(type!=0&&type!=1))">
           <img :src="it.norImageUrl" style="width: 100%" v-for="(it, i) in d.imageList" :key="i"/>
         </div>
@@ -36,13 +36,13 @@
       </div>
       <div class="content" v-if="type==2&&userType==1">
         <span>不通过原因：</span>
-        <Input placeholder="请输入不通过原因" v-model="resion" style="width: 100%" type="textarea" :rows="4"/>
+        <Input placeholder="请输入不通过原因" v-model="d.notPassRemarks" style="width: 100%" type="textarea" :rows="4"/>
       </div>
       <div class="content">
         <Button type="primary" v-if="type==0" class="Sbtn" long @click="posthj">发布患教</Button>
         <Button type="warning" v-if="type==1&&userType==2" class="Sbtn" long @click="posthj">修改患教</Button>
-        <Button type="error" v-if="type==2&&userType==1" class="Sbtn2"  @click="posthj">不通过</Button>
-        <Button type="success" v-if="type==2&&userType==1" class="Sbtn2"  @click="posthj">通过-发布</Button>
+        <Button type="error" v-if="type==2&&userType==1" class="Sbtn2"  @click="zspp(false)">不通过</Button>
+        <Button type="success" v-if="type==2&&userType==1" class="Sbtn2"  @click="zspp(true)">通过-发布</Button>
       </div>
     </div>
 </template>
@@ -65,7 +65,6 @@
       return {
         come: '',
         aClass: '原创',
-        resion: '',
         type: 0,
         userType: 1,
         d: {
@@ -93,6 +92,16 @@
         }).then((res) => {
           this.d = res.data;
           this.d.type = this.d.type + '';
+          if(this.type == 1) {
+            let imgs = res.data.imageList;
+            if(this.userType == 2) {
+              this.$refs.imgC.newIMGDate(this.d.imageList);
+              this.d.imageList = [];
+              imgs.map((it) => {
+                this.d.imageList.push(it.id);
+              })
+            }
+          }
         }).catch((error) => {
           this.$Message.error('网络掉了，请您稍后');
         });
@@ -106,7 +115,39 @@
         } else if(this.userType == 2) {
           this.d.status = 0;
         }
-
+        this.d.notPassRemarks = '';
+        this.$ajax({
+          method: 'post',
+          url: patientEducationSave(),
+          dataType: 'JSON',
+          data: this.d,
+          contentType: 'application/json;charset=UTF-8',
+        }).then((res) => {
+          this.$Message.success('提交成功');
+          setTimeout(()=>{this.back()}, 1000)
+        }).catch((error) => {
+          this.$Message.error('网络掉了，请您稍后');
+        });
+      },
+      zspp(pass) {
+        if(this.userType != 1) {
+          return false;
+        }
+        if(pass) {
+          this.d.status = 1;
+          this.d.notPassRemarks = '';
+        } else {
+          if(this.d.notPassRemarks == '') {
+            this.$Message.warning('请输入未通过原因');
+            return false;
+          }
+          this.d.status = 2;
+        }
+        let imgs = this.d.imageList;
+        this.d.imageList = [];
+        imgs.map((it) => {
+          this.d.imageList.push(it.id);
+        })
         this.$ajax({
           method: 'post',
           url: patientEducationSave(),

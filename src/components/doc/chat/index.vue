@@ -12,8 +12,9 @@
       </Row>
     </div>
 
-    <div class="content" id="ccon">
+    <div class="content" id="ccon" @scroll="onscrolls">
       <textCon v-for="(it, i) in chat" :key="i" :data="it" :userType="type"/>
+      <div style="position: fixed;bottom: 45px;text-align: center;width: 100%;color: #999;" v-if="moreSHow" @click="more">显示更多</div>
     </div>
 
     <div class="option">
@@ -46,21 +47,26 @@
     components: {textCon},
     data() {
       return {
+        sh: '',
         docID: '',
         type: 1,
         isOver: false,
         showF: false,
         closeQ: false,
+        moreSHow: false,
+        height: '',
         imgSrc: '',
         title: '',
         text: '',
         images: '',
-        total: '',
         pageN: '',
         cid: '',
         //1acc  2doc
         chat: [],
         imgDate: '',
+        pg: 1,
+        pages: '',
+        total: '',
       };
     },
     created() {
@@ -84,6 +90,7 @@
       const c = document.getElementById('ccon');
       c.style.height = h - 91 + 'px';
       c.scrollTop = c.scrollHeight;
+      setTimeout(()=>{this.sh = c.scrollTop;}, 500)
     },
     watch: {
       chat: {
@@ -241,15 +248,32 @@
       getData() {
         this.$ajax({
           method: 'get',
-          url: getChatList() + this.cid,
+          url: getChatList() + this.cid + '&size=10&page=' + this.pg,
           dataType: 'JSON',
           contentType: 'application/json;charset=UTF-8',
         }).then((res) => {
           this.total = res.data.total;
-          this.chat = res.data.results;
+          this.pages = res.data.pages;
+          this.chat =  this.chat.concat(res.data.results);
+          console.log(this.chat);
         }).catch((error) => {
           this.$Message.error('网络掉了，请您稍后');
         });
+      },
+      onscrolls() {
+        const c = document.getElementById('ccon');
+        if(this.sh - c.scrollTop <= 0 && this.total>10){
+          this.moreSHow = true;
+        } else {
+          this.moreSHow = false;
+        }
+      },
+      more() {
+        if(this.pg >= this.pages) {
+          return false
+        }
+        this.pg += 1;
+        this.getData();
       },
     },
   };
@@ -271,6 +295,7 @@
     box-shadow: 0 0 20px #ddd;
     background: #f4f4f4;
     padding: .4rem;
+    padding-bottom: 1.8rem;
   }
   .option{
     padding: .4rem;

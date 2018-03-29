@@ -4,7 +4,7 @@
       <Button type="primary" class="Sbtn" @click="posthj">发布患教</Button>
     </div>
     <Table :columns="columns1" :data="data1" @on-row-click="datile"></Table>
-    <Page :current="1" :total="50" size="small" style="text-align: center; margin-top: .4rem"></Page>
+    <Page :current="pageN" :total="total" size="small" style="text-align: center; margin-top: .4rem" @on-change="pageChange"></Page>
   </div>
 </template>
 
@@ -36,12 +36,16 @@
         ],
         data1: [],
         pageN: 1,
-        total: '',
+        total: 1,
       };
     },
     methods: {
       posthj() {
         this.$router.push({path: 'posthj/0'});
+      },
+      pageChange(newPage) {
+        this.pageN = newPage;
+        this.getData();
       },
       datile(data, index) {
         let type = 1;

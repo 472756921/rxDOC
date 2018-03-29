@@ -15,28 +15,28 @@
       </div>
       <div class="content">
         <span>活动标题：</span>
-        <Input style="width: 80%" :maxlength="30"/>
+        <Input style="width: 80%" :maxlength="30" v-model="upD.title"/>
       </div>
       <div class="content">
         <span>活动简述：</span>
-        <Input type="textarea" style="width: 80%" :maxlength="100"/>
+        <Input type="textarea" style="width: 80%" v-model="upD.sketch" :maxlength="100"/>
       </div>
       <div class="content">
         <span>活动内容：</span>
-        <Input type="textarea" style="width: 80%" :rows="4" :maxlength="500"/>
+        <Input type="textarea" style="width: 80%" v-model="upD.content" :rows="4" :maxlength="500"/>
       </div>
       <div class="content">
         <span>活动地址：</span>
-        <Select v-model="provincesID" style="width:40%">
+        <Select v-model="upD.provinceId " style="width:40%">
           <Option v-for="item in provinces" :value="item.id" :key="item.id">{{ item.name }}</Option>
         </Select>
-        <Select v-model="cityID" style="width:39%">
+        <Select v-model="upD.cityId" style="width:39%">
           <Option v-for="item in city" :value="item.id" :key="item.id">{{ item.name }}</Option>
         </Select>
       </div>
       <div class="content">
         <span>开始时间：</span>
-        <DatePicker type="datetime" :options="optionsA" v-model="sd" format="yyyy-MM-dd HH:mm" placeholder="请选择活动时间" style="width: 80%" :editable="false" @on-change="change('sd')"></DatePicker>
+        <DatePicker type="datetime" :options="optionsA" v-model="sd" format="yyyy-MM-dd HH:mm" placeholder="请选择活动时间" style="width: 80%" :editable="false" @on-change="asdsad"></DatePicker>
       </div>
       <div class="content">
         <span>结束时间：</span>
@@ -44,7 +44,7 @@
       </div>
       <div class="content">
         <span>活动名额：</span>
-        <Input style="width: 80%" :maxlength="30" placeholder="输入 -1 表示不限名额"/>
+        <Input style="width: 80%" v-model="upD.reportNum" :maxlength="30" placeholder="输入 -1 表示不限名额"/>
       </div>
       <div class="content">
         <span>封面</span>
@@ -61,6 +61,7 @@
 <script>
   import imgUP from '../imgUp';
   import imgUPS from '../imgUpS';
+  import {latestActivitysave, activityStylesave} from '../../interface';
 
     export default {
       name: 'new-acitve',
@@ -108,20 +109,42 @@
           provincesID: '',
           cityID: '',
           disabledGroup: '最新活动',
+          img:  {
+            data: '',
+            fileType: '',
+            id: 0,
+            norImageUrl: '',
+            originalName: ''
+          },
+          upD: {
+            cityId: 0,
+            content: '',
+            coverImageJsonList: [],
+            endTime: '',
+            id: 0,
+            imageJsonList: [],
+            num: 0,
+            provinceId: 0,
+            reportNum: 0,
+            sketch: '',
+            startTime: '',
+            surplusNum: 0,
+            title: ''
+          },
         }
       },
       methods: {
-        send() {},
         back() {window.history.go(-1)},
-        change(type) {
-          if(type == 'sd') {
-            const times = new Date(this.sd).getTime();
-            this.optionsB = {
-              disabledDate(date) {
-                return date && date.valueOf() < times;
-              }
-            };
-          }
+        asdsad(date) {
+          console.log(date);
+          // if(type == 'sd') {
+          //   const times = new Date(this.sd).getTime();
+          //   this.optionsB = {
+          //     disabledDate(date) {
+          //       return date && date.valueOf() < times;
+          //     }
+          //   };
+          // }
         },
         getCity(n) {
           this.$ajax({
@@ -132,6 +155,29 @@
           }).then((res) => {
             console.log(res);
             this.city = res.data;
+          }).catch((error) => {
+            this.$Message.error('网络掉了，请您稍后');
+          });
+        },
+        send() {
+          this.ed.log
+          return false;
+
+          let URL = latestActivitysave();
+          if(this.disabledGroup == '活动风采') {
+            URL = activityStylesave();
+          }
+
+          data: this.upD,
+
+          this.$ajax({
+            method: 'post',
+            url:URL,
+            dataType: 'JSON',
+            data: this.upD,
+            contentType: 'application/json;charset=UTF-8',
+          }).then((res) => {
+            console.log(res);
           }).catch((error) => {
             this.$Message.error('网络掉了，请您稍后');
           });

@@ -33,6 +33,7 @@
     data() {
       return {
         ud: '',
+        dID: '',
         date: '2018-01',
         d: {
           zx: false,
@@ -68,7 +69,8 @@
           method: 'post',
           data: {
             "online": this.d.zx?1:0,
-            "type": type
+            "type": type,
+            id: this.dID,
           },
           url: saveDoctor(),
         }).then((res) => {
@@ -89,6 +91,7 @@
           res.data.type.indexOf('1')!=-1?this.d.wz = true:this.d.wz = false;
           res.data.type.indexOf('2')!=-1?this.d.dh = true:this.d.dh = false;
           res.data.type.indexOf('3')!=-1?this.d.sp = true:this.d.sp = false;
+          this.dID = res.data.id;
         }).catch((error) => {
           this.$Message.error('网络故障，无法获取');
         });
