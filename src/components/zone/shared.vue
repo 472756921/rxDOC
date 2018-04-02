@@ -2,7 +2,7 @@
   <div>
     <Table :columns="columns1" :data="data1" @on-row-click="datile"></Table>
     <Page :current="pageN" :total="total" size="small" style="text-align: center; margin-top: .4rem" @on-change="pageChange"></Page>
-    <Button type="info" class="Sbtn" @click="posthj">写一条</Button>
+    <Button type="info" class="Sbtn" @click="posthj" v-if="utype==1">写一条</Button>
   </div>
 </template>
 

@@ -2,7 +2,7 @@
     <div>
       <div class="title">我的病人</div>
       <Table :columns="columns1" :data="data1" @on-row-click="datile"></Table>
-      <Page :current="pageN" :total="total" size="small" style="text-align: center; margin-top: .4rem"></Page>
+      <Page :current="pageN" :total="total" size="small" style="text-align: center; margin-top: .4rem" @on-change="pageChange"></Page>
     </div>
 </template>
 
@@ -26,6 +26,10 @@
       this.getData();
     },
     methods: {
+      pageChange(newPage) {
+        this.pageN = newPage;
+        this.getData();
+      },
       datile(data, index) {
         this.$router.push({path: '/patientdatile/'+data.id})
       },

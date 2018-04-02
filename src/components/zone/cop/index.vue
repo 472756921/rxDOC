@@ -1,6 +1,6 @@
 <template>
     <div class="cop">
-      <div class="my">
+      <div class="my" v-if="ut==1">
         <Row>
           <Col span="3"><Avatar style="color: #f56a00;background-color: #fde3cf">User</Avatar></Col>
           <Col span="17">
@@ -21,7 +21,7 @@
               <div style="color: #ccc;font-size: 12px">
                 <span>{{it.addTime}}</span>
                 <input v-model="bcp" v-if="isB&&showI==i" size="small" autofocus="autofocus" placeholder="说说你的看法" @blur="backS" class="rebackInput"></input>
-                <span style="float: right;color:#19be6b;" @click="backS(i)">{{baText}}</span>
+                <span style="float: right;color:#19be6b;" @click="backS(i, it)" v-if="ut==1">{{baText}}</span>
               </div>
             </Col>
           </Row>
@@ -31,11 +31,12 @@
 </template>
 
 <script>
-  import {getAllCustomerShareComment} from '../../../interface';
+  import {getAllCustomerShareComment, customerShareComment} from '../../../interface';
     export default {
       name: 'index',
       data() {
         return {
+          ut: 1,
           cp: '',
           isB: false,
           bcp: '',
@@ -46,9 +47,30 @@
       },
       mounted() {
         this.getData();
+        this.ut = sessionStorage.getItem('type');
       },
       methods: {
-        posthj() {},
+        posthj() {
+          if(this.cp == '') {
+            return false;
+          }
+          let data = {
+            content: this.cp,
+            customerShareId: this.$route.params.id,
+            id: '',
+            replyCustomerId: '',
+          };
+          this.$ajax({
+            method: 'post',
+            data: data,
+            url: customerShareComment(),
+          }).then((res) => {
+            this.$Message.success('评论成功');
+            window.location.reload();
+          }).catch((error) => {
+            this.$Message.error('网络故障，获取失败');
+          });
+        },
         getData() {
           this.$ajax({
             method: 'get',
@@ -59,12 +81,32 @@
             this.$Message.error('网络故障，获取失败');
           });
         },
-        backS(i) {
+        backS(i, it) {
           this.showI = i;
           if(this.baText == '回复'){
             this.baText = '发送';
             this.isB = true;
           } else if (this.baText == '发送') {
+            if(this.bcp == '') {
+              return false;
+            }
+            let data = {
+              content: this.bcp,
+              customerShareId: this.$route.params.id,
+              id: '',
+              replyCustomerId: it.customerId,
+            };
+
+            this.$ajax({
+              method: 'post',
+              data: data,
+              url: customerShareComment(),
+            }).then((res) => {
+              this.$Message.success('回复成功');
+              window.location.reload();
+            }).catch((error) => {
+              this.$Message.error('网络故障，获取失败');
+            });
             this.baText = '回复';
             this.isB = false;
           }

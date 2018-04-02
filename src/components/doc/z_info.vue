@@ -94,7 +94,8 @@
           method: 'get',
           url: getUserInfo(),
         }).then((res) => {
-          this.name = res.data.data.account;
+          this.name = res.data.data.name;
+          sessionStorage.setItem('uid', res.data.data.id);
         }).catch((error) => {
           this.$Message.error('网络故障，无法获取');
         });

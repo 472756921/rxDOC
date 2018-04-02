@@ -9,7 +9,7 @@
     <div class="content">
       <div class="artTitle"><Avatar size="small" :src="data.customerIcon" /> {{data.customerName}}</div>
       <h3 style="padding: .6rem">{{data.title}}</h3>
-      <p>{{data.content}}</p>
+      <p v-html="data.content"></p>
     </div>
     <div class="content">
       <div class="imgList" v-for="(it, i) in data.imageJsonList" :key="i">

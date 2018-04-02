@@ -27,7 +27,7 @@
       </div>
       <div class="content">
         <span>活动地址：</span>
-        <Select v-model="upD.provinceId " style="width:40%">
+        <Select v-model="upD.provinceId " style="width:40%" @on-change="changePC">
           <Option v-for="item in provinces" :value="item.id" :key="item.id">{{ item.name }}</Option>
         </Select>
         <Select v-model="upD.cityId" style="width:39%">
@@ -36,23 +36,19 @@
       </div>
       <div class="content">
         <span>开始时间：</span>
-        <DatePicker type="datetime" :options="optionsA" v-model="sd" format="yyyy-MM-dd HH:mm" placeholder="请选择活动时间" style="width: 80%" :editable="false" @on-change="asdsad"></DatePicker>
+        <DatePicker type="datetime" :options="optionsA" v-model="sd" format="yyyy-MM-dd HH:mm" placeholder="请选择活动时间" style="width: 80%" :editable="false" @on-change="changeDateA"></DatePicker>
       </div>
       <div class="content">
         <span>结束时间：</span>
-        <DatePicker type="datetime" :options="optionsB" v-model="ed" format="yyyy-MM-dd HH:mm" placeholder="请选择活动时间" style="width: 80%" :editable="false"></DatePicker>
+        <DatePicker type="datetime" :options="optionsB" v-model="ed" format="yyyy-MM-dd HH:mm" placeholder="请选择活动时间" style="width: 80%" :editable="false" @on-change="changeDateB"></DatePicker>
       </div>
       <div class="content">
         <span>活动名额：</span>
-        <Input style="width: 80%" v-model="upD.reportNum" :maxlength="30" placeholder="输入 -1 表示不限名额"/>
+        <Input style="width: 80%" v-model="upD.num" :maxlength="30" placeholder="输入 -1 表示不限名额"/>
       </div>
       <div class="content">
-        <span>封面</span>
-        <imgUPS/>
-      </div>
-      <div class="content">
-        <span>相册</span>
-        <imgUP/>
+        <span>相册<small>（第一张默认为封面图片）</small></span>
+        <imgUP :type="1" ref="imgC" @handleSuccessc="fpsuccess" :ptype="5||6"/>
       </div>
       <Button type="info" class="sbtn" @click="send">发布</Button>
     </div>
@@ -60,17 +56,11 @@
 
 <script>
   import imgUP from '../imgUp';
-  import imgUPS from '../imgUpS';
   import {latestActivitysave, activityStylesave} from '../../interface';
 
     export default {
       name: 'new-acitve',
-      components: {imgUP, imgUPS},
-      watch: {
-        provincesID(v, ov) {
-          this.getCity(v);
-        },
-      },
+      components: {imgUP},
       created() {
         const utype = this.$route.params.type;
         if(utype == 1) {
@@ -90,7 +80,7 @@
         });
 
       },
-      data(){
+      data() {
         return {
           optionsA: {
             disabledDate (date) {
@@ -109,42 +99,37 @@
           provincesID: '',
           cityID: '',
           disabledGroup: '最新活动',
-          img:  {
-            data: '',
-            fileType: '',
-            id: 0,
-            norImageUrl: '',
-            originalName: ''
-          },
           upD: {
             cityId: 0,
             content: '',
             coverImageJsonList: [],
             endTime: '',
-            id: 0,
+            id: '',
             imageJsonList: [],
-            num: 0,
+            num: -1,
             provinceId: 0,
-            reportNum: 0,
             sketch: '',
             startTime: '',
-            surplusNum: 0,
             title: ''
           },
         }
       },
       methods: {
+        changePC() {
+          this.getCity(this.upD.provinceId);
+        },
         back() {window.history.go(-1)},
-        asdsad(date) {
-          console.log(date);
-          // if(type == 'sd') {
-          //   const times = new Date(this.sd).getTime();
-          //   this.optionsB = {
-          //     disabledDate(date) {
-          //       return date && date.valueOf() < times;
-          //     }
-          //   };
-          // }
+        changeDateA(date) {
+          const times = new Date(this.sd).getTime();
+          this.optionsB = {
+            disabledDate(date) {
+              return date && date.valueOf() < times;
+            }
+          };
+          this.upD.startTime = date;
+        },
+        changeDateB(date) {
+          this.upD.endTime = date;
         },
         getCity(n) {
           this.$ajax({
@@ -153,23 +138,19 @@
             dataType: 'JSON',
             contentType: 'application/json;charset=UTF-8',
           }).then((res) => {
-            console.log(res);
             this.city = res.data;
           }).catch((error) => {
-            this.$Message.error('网络掉了，请您稍后');
           });
         },
+        fpsuccess(data) {
+          this.upD.imageJsonList.push(data.id);
+        },
         send() {
-          this.ed.log
-          return false;
-
           let URL = latestActivitysave();
           if(this.disabledGroup == '活动风采') {
             URL = activityStylesave();
           }
-
-          data: this.upD,
-
+          this.upD.coverImageJsonList = [this.upD.imageJsonList[0]];
           this.$ajax({
             method: 'post',
             url:URL,

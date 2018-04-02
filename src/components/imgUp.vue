@@ -24,6 +24,7 @@
       :on-format-error="handleFormatError"
       :on-exceeded-size="handleMaxSize"
       :before-upload="handleBeforeUpload"
+      :data={type:this.ptype}
       multiple
       type="drag"
       action="http://118.31.38.219/admin/app/api/base/uploadImg"
@@ -39,7 +40,7 @@
 </template>
 <script>
   export default {
-    props: ['type'],
+    props: ['type', 'data', 'ptype'],
     data () {
       return {
         defaultList: [
@@ -54,17 +55,13 @@
       }
     },
     mounted() {
-      // this.uploadList = this.$refs.upload.fileList;
+      setTimeout(()=>{this.uploadList = this.$refs.upload.fileList;}, 100)
     },
     methods: {
-      newIMGDate(data) {
-        let time = data.length * 100;
-        if(this.type == 1) {
-          data.map((it)=>{
-            this.defaultList.push({name: 'asdfsaxdsiu', url: it.norImageUrl});
-          })
-        }
-        setTimeout(()=> {this.uploadList = this.$refs.upload.fileList;}, time);
+      newIMGDate(imgList) {
+        imgList.map((it)=>{
+          this.defaultList.push({name: it.fileName, url: it.norImageUrl});
+        })
       },
       handleView (url) {
         this.imgName = url;

@@ -108,7 +108,7 @@
         this.$ajax({
           method: 'post',
           data:{
-            "adminId": this.type==1?6:'',
+            "adminId": this.type==1?sessionStorage.getItem('uid'):'',
             "content": this.text,
             "customerId": '',
             "doctorConsultId": this.cid,

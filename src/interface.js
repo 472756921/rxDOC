@@ -81,3 +81,6 @@ export const latestActivitysave = () => {
 export const activityStylesave = () => {
   return host + 'activityStyle/save';
 }
+export const customerShareComment = () => {
+  return host + 'customerShareComment/save';
+}
