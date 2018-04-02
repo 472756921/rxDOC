@@ -1,6 +1,11 @@
 <template>
     <div>
-      <div class="title">我的病人</div>
+      <div class="title">
+        我的病人
+        <Input v-model="search" size="small" placeholder="输入宝宝名字">
+          <Button slot="append" icon="ios-search" @click="searchBB"></Button>
+        </Input>
+      </div>
       <Table :columns="columns1" :data="data1" @on-row-click="datile"></Table>
       <Page :current="pageN" :total="total" size="small" style="text-align: center; margin-top: .4rem" @on-change="pageChange"></Page>
     </div>
@@ -13,9 +18,11 @@
     name: 'index',
     data() {
       return {
+        search: '',
         columns1: [
           {title: '宝宝名',key: 'name'},
           {title: '月龄',key: 'age'},
+          {title: '性别',key: 'sex'},
         ],
         data1: [],
         pageN: 1,
@@ -32,6 +39,21 @@
       },
       datile(data, index) {
         this.$router.push({path: '/patientdatile/'+data.id})
+      },
+      searchBB() {
+        if(this.search == '') {
+          this.getData();
+          return false;
+        }
+        this.$ajax({
+          method: 'get',
+          url: getChildrent() + this.pageN + '&name=' + this.search,
+        }).then((res) => {
+          this.data1 = res.data.content;
+          this.total = res.data.totalElements;
+        }).catch((error) => {
+          this.$Message.error('网络出错，请稍后再试');
+        });
       },
       getData() {
         this.$ajax({

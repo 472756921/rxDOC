@@ -48,7 +48,7 @@
       </div>
       <div class="content">
         <span>相册<small>（第一张默认为封面图片）</small></span>
-        <imgUP :type="1" ref="imgC" @handleSuccessc="fpsuccess" :ptype="5||6"/>
+        <imgUP :type="1" ref="imgC" @handleSuccessc="fpsuccess" :ptype="this.ptype" />
       </div>
       <Button type="info" class="sbtn" @click="send">发布</Button>
     </div>
@@ -65,8 +65,10 @@
         const utype = this.$route.params.type;
         if(utype == 1) {
           this.disabledGroup = '最新活动';
+          this.ptype = 5;
         } else {
           this.disabledGroup = '活动风采';
+          this.ptype = 6;
         }
         this.$ajax({
           method: 'get',
@@ -92,6 +94,7 @@
               return date && date.valueOf() < Date.now();
             }
           },
+          ptype: 0,
           sd: "",
           ed: "",
           provinces: [],
@@ -112,6 +115,17 @@
             startTime: '',
             title: ''
           },
+        }
+      },
+      watch: {
+        disabledGroup: function (v, ov) {
+          if(this.disabledGroup == '最新活动') {
+            this.ptype = 5;
+          }
+          if(this.disabledGroup == '活动风采') {
+            this.ptype = 6;
+          }
+          this.$refs.imgC.changeTtype(this.ptype);
         }
       },
       methods: {

@@ -52,7 +52,7 @@ export const uploadImg = () => {
   return host + '/base/uploadImg';
 }
 export const getAllChildrenGrowRecord = () => {
-  return host + 'childrenGrowRecord/getAllChildrenGrowRecord?childrenId=';
+  return host + 'childrenGrowRecord/getAllChildrenGrowRecord?size=11&childrenId=';
 }
 export const overDoctorConsult = () => {
   return host + 'doctorConsult/overDoctorConsult?id=';
@@ -83,4 +83,10 @@ export const activityStylesave = () => {
 }
 export const customerShareComment = () => {
   return host + 'customerShareComment/save';
+}
+export const getAllChildrenHealthRecord = () => {
+  return host + 'childrenHealthRecord/getAllChildrenHealthRecord';
+}
+export const customerShareSave = () => {
+  return host + 'customerShare/save';
 }

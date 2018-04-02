@@ -7,7 +7,7 @@
       </Row>
     </div>
     <Tabs :animated="false" >
-      <TabPane label="医疗信息" name="name1"></TabPane>
+      <TabPane label="医疗信息" name="name1"><midc/></TabPane>
       <TabPane label="生长监控" name="name2"><growthList/></TabPane>
       <TabPane label="自查结果" name="name3"></TabPane>
     </Tabs>
@@ -16,10 +16,11 @@
 
 <script>
   import growthList from './datile/growthList';
+  import midc from './datile/midc';
 
     export default {
       name: 'datile',
-      components: {growthList},
+      components: {growthList, midc},
       data() {
         return {
           a: '',

@@ -25,7 +25,7 @@
         <Input placeholder="转载来源" v-if="d.type=='2'" v-model="d.resource" :disabled="(userType==1&&(type==1||type==2||type==3))||(userType==2&&(type==2||type==3))"/>
       </div>
       <div class="content">
-        <imgup :type="type" v-if="(userType==1&&type==0)||(userType==2&&(type==0||type==1))" ref="imgC" @handleSuccessc="fpsuccess"/>
+        <imgup :type="type" v-if="(userType==1&&type==0)||(userType==2&&(type==0||type==1))" ref="imgC" @handleSuccessc="fpsuccess" :ptype="1"/>
         <div v-if="(userType==1&&type!=0)||(userType==2&&(type!=0&&type!=1))">
           <img :src="it.norImageUrl" style="width: 100%" v-for="(it, i) in d.imageList" :key="i"/>
         </div>

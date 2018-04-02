@@ -15,6 +15,7 @@ import zonedatile from '@/components/zone/datile';
 import s_datile from '@/components/zone/s_datile';
 
 import newAcitve from '@/components/zone/newAcitve';
+import n_shared from '@/components/zone/n_shared';
 
 
 Vue.use(Router)
@@ -70,6 +71,11 @@ export default new Router({
       path: '/newAcitve/:type',
       name: 'newAcitve',
       component: newAcitve
+    },
+    {
+      path: '/n_shared',
+      name: 'n_shared',
+      component: n_shared
     },
   ]
 })

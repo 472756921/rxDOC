@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <div class="demo-upload-list" v-for="item in uploadList">
       <template v-if="item.status === 'finished'">
         <img :src="item.url">
@@ -24,7 +23,7 @@
       :on-format-error="handleFormatError"
       :on-exceeded-size="handleMaxSize"
       :before-upload="handleBeforeUpload"
-      :data={type:this.ptype}
+      :data={type:this.tp}
       multiple
       type="drag"
       action="http://118.31.38.219/admin/app/api/base/uploadImg"
@@ -49,12 +48,14 @@
           //   'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
           // },
         ],
+        tp: '',
         imgName: '',
         visible: false,
         uploadList: [],
       }
     },
     mounted() {
+      this.tp = this.ptype;
       setTimeout(()=>{this.uploadList = this.$refs.upload.fileList;}, 100)
     },
     methods: {
@@ -62,6 +63,9 @@
         imgList.map((it)=>{
           this.defaultList.push({name: it.fileName, url: it.norImageUrl});
         })
+      },
+      changeTtype(data){
+        this.tp = data;
       },
       handleView (url) {
         this.imgName = url;

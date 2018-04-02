@@ -32,9 +32,11 @@
     },
     methods: {
       datile(data, index){
-        this.$router.push({path: '/s_datile/'+data.id, query: {type: this.type}})
+        this.$router.push({path: '/s_datile/'+data.id, query: {type: this.type}});
       },
-      posthj() {},
+      posthj() {
+        this.$router.push({path: '/n_shared'});
+      },
       getData() {
         this.$ajax({
           method: 'get',
