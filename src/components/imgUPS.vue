@@ -1,5 +1,5 @@
 <template>
-  <Upload action="http://118.31.38.219/admin/app/api/base/uploadImg">
+  <Upload action="http://www.bensonchen.cn/admin/app/api/base/uploadImg">
     <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
   </Upload>
 </template>

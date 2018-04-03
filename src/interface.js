@@ -1,4 +1,4 @@
-const host = 'http://118.31.38.219/admin/app/api/';
+const host = 'http://www.bensonchen.cn/admin/app/api/';
 
 export const getJZList = () => {
   return host + 'doctorConsult/getAllDoctorConsult';
