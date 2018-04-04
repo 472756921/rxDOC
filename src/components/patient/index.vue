@@ -13,6 +13,7 @@
 
 <script>
   import {getChildrent} from '../../interface';
+  import {DgetUserInfo} from '../../interface';
 
   export default {
     name: 'index',
@@ -28,6 +29,18 @@
         pageN: 1,
         total: 1,
       };
+    },
+    created() {
+      this.$ajax({
+        method: 'get',
+        url: DgetUserInfo(),
+        dataType: 'JSON',
+        contentType: 'application/json;charset=UTF-8',
+      }).then((res) => {
+        sessionStorage.setItem('type', res.data.data.type);
+      }).catch((error) => {
+        this.$Message.error('网络掉了，请您稍后');
+      });
     },
     mounted() {
       this.getData();

@@ -255,7 +255,6 @@
           this.total = res.data.total;
           this.pages = res.data.pages;
           this.chat =  this.chat.concat(res.data.results);
-          console.log(this.chat);
         }).catch((error) => {
           this.$Message.error('网络掉了，请您稍后');
         });

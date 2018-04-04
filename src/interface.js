@@ -70,7 +70,7 @@ export const doctorAll = () => {
   return host + 'doctor/doctorAll';
 }
 export const getUserInfo = () => {
-  return host + 'wechat/getUserInfo';
+  return host + 'doctor/getUserInfo';
 }
 export const getDoctorIdDetail = () => {
   return host + 'doctor/getDoctorIdDetail?id=';
@@ -89,4 +89,7 @@ export const getAllChildrenHealthRecord = () => {
 }
 export const customerShareSave = () => {
   return host + 'customerShare/save';
+}
+export const DgetUserInfo = () => {
+  return host + 'doctor/getUserType';
 }

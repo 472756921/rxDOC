@@ -11,6 +11,7 @@
   import hj from './hj';
   import info from './info';
   import zinfo from './z_info';
+  import {DgetUserInfo} from '../../interface';
 
   export default {
     name: 'index',
@@ -22,10 +23,21 @@
       };
     },
     created() {
-      this.type = sessionStorage.getItem('type');
-      if(sessionStorage.getItem('Tabname') != null){
-        this.name = sessionStorage.getItem('Tabname');
-      }
+      this.$ajax({
+        method: 'get',
+        url: DgetUserInfo(),
+        dataType: 'JSON',
+        contentType: 'application/json;charset=UTF-8',
+      }).then((res) => {
+        sessionStorage.setItem('type', res.data.data.type);
+        this.type = sessionStorage.getItem('type');
+        if(sessionStorage.getItem('Tabname') != null){
+          this.name = sessionStorage.getItem('Tabname');
+        }
+      }).catch((error) => {
+        this.$Message.error('网络掉了，请您稍后');
+      });
+
     },
     methods: {
       change(nd) {

@@ -3,10 +3,10 @@
       <h3>姓名：{{ud.name}}</h3>
       <br/>
       <Row class="list">
-        <Col span="12">在线状态： <i-Switch v-model="d.zx" @on-change="change"><span slot="open">开</span><span slot="close">关</span></i-Switch></Col>
-        <Col span="12">电话预约： <i-Switch v-model="d.dh" @on-change="change"><span slot="open">开</span><span slot="close">关</span></i-Switch></Col>
-        <Col span="12">视频预约： <i-Switch v-model="d.sp" @on-change="change"><span slot="open">开</span><span slot="close">关</span></i-Switch></Col>
-        <Col span="12">在线问诊： <i-Switch v-model="d.wz" @on-change="change"><span slot="open">开</span><span slot="close">关</span></i-Switch></Col>
+        <Col span="12">在线状态： <i-Switch v-model="d.zx" @on-change="changeST"><span slot="open">开</span><span slot="close">关</span></i-Switch></Col>
+        <Col span="12">电话预约： <i-Switch v-model="d.dh" @on-change="changeST"><span slot="open">开</span><span slot="close">关</span></i-Switch></Col>
+        <Col span="12">视频预约： <i-Switch v-model="d.sp" @on-change="changeST"><span slot="open">开</span><span slot="close">关</span></i-Switch></Col>
+        <Col span="12">在线问诊： <i-Switch v-model="d.wz" @on-change="changeST"><span slot="open">开</span><span slot="close">关</span></i-Switch></Col>
       </Row>
       <div>
         <h3>医生简介：</h3>
@@ -54,7 +54,7 @@
       }
     },
     methods: {
-      change (status) {
+      changeST () {
         let type = '';
         if(this.d.wz) {
           type += '1';
@@ -68,7 +68,7 @@
         this.$ajax({
           method: 'post',
           data: {
-            "online": this.d.zx?1:0,
+            "online": this.d.zx?1:2,
             "type": type,
             id: this.dID,
           },
@@ -87,7 +87,7 @@
           url: getDoctorById(),
         }).then((res) => {
           this.ud = res.data
-          res.data.onLine == 0?this.d.zx = false:this.d.zx = true;
+          res.data.onLine == 2?this.d.zx = false:this.d.zx = true;
           res.data.type.indexOf('1')!=-1?this.d.wz = true:this.d.wz = false;
           res.data.type.indexOf('2')!=-1?this.d.dh = true:this.d.dh = false;
           res.data.type.indexOf('3')!=-1?this.d.sp = true:this.d.sp = false;

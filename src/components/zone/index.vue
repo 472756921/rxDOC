@@ -1,5 +1,5 @@
 <template>
-  <Tabs :value="name" class="Ben" :animated="false" @on-click="change">
+  <Tabs :value="name" class="Ben" :animated="false" @on-click="change" v-if="showT">
     <TabPane label="最新活动" name="name1"><list :type="1"/></TabPane>
     <TabPane label="活动风采" name="name2"><list :type="2"/></TabPane>
     <TabPane label="共享之家" name="name3"><shared/></TabPane>
@@ -9,6 +9,7 @@
 <script>
   import list from './list';
   import shared from './shared';
+  import {DgetUserInfo} from '../../interface';
 
   export default {
     name: 'index',
@@ -17,13 +18,24 @@
       return{
         type: 1,
         name: 'name1',
+        showT: false,
       };
     },
     created() {
-      this.type = sessionStorage.getItem('type');
-      if(sessionStorage.getItem('Tabname2') != null){
-        this.name = sessionStorage.getItem('Tabname2');
-      }
+      this.$ajax({
+        method: 'get',
+        url: DgetUserInfo(),
+        dataType: 'JSON',
+        contentType: 'application/json;charset=UTF-8',
+      }).then((res) => {
+        sessionStorage.setItem('type', res.data.data.type);
+        if(sessionStorage.getItem('Tabname2') != null){
+          this.name = sessionStorage.getItem('Tabname2');
+        }
+        this.showT = true;
+      }).catch((error) => {
+        this.$Message.error('网络掉了，请您稍后');
+      });
     },
     methods: {
       change(nd) {

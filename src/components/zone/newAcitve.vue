@@ -172,7 +172,7 @@
             data: this.upD,
             contentType: 'application/json;charset=UTF-8',
           }).then((res) => {
-            console.log(res);
+            this.$Message.success('提交成功');
           }).catch((error) => {
             this.$Message.error('网络掉了，请您稍后');
           });
