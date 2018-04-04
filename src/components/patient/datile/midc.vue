@@ -18,7 +18,7 @@
         total: 1,
         columns1: [
           {
-            title: '测量时间',
+            title: '名字',
             key: 'childrenName'
           },
           {
@@ -44,6 +44,8 @@
                 return <span>网络诊室</span>
               } else if(r.row.type == 4){
                 return <span>预约门诊</span>
+              } else if(r.row.type == null){
+                return <span>就医记录</span>
               }
             }
           },
