@@ -106,7 +106,7 @@
     mounted() {
       const h = window.screen.availHeight;
       const c = document.getElementById('ccon');
-      c.style.height = h - 200 + 'px';
+      c.style.height = h - 250 + 'px';
       c.scrollTop = c.scrollHeight;
       setTimeout(()=>{this.sh = c.scrollTop;}, 500)
     },
