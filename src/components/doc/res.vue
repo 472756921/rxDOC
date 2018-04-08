@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="Ilst">
     <!--@on-row-click="datile"-->
-    <Table :columns="columns1" :data="data1"></Table>
+    <Table :columns="columns1" :data="data1" style="font-size: 18px!important;"></Table>
     <Page :current="1" :total="total" size="small" style="text-align: center; margin-top: .4rem" @on-change="pageChange"></Page>
     <Modal v-model="closeQ" title="确认关闭" :closable="false" :mask-closable="false" @on-ok="closeQues">
       <p slot="header" style="text-align:center;color: #f60;">结束服务</p>
@@ -39,8 +39,8 @@
                 })
               }
             },
-            {title: '宝宝名',key: 'childrenName', width: 80},
-            {title: '类型',key: 'type',width: 90,
+            {title: '宝宝名',key: 'childrenName', width: 78},
+            {title: '类型',key: 'type',width: 100,
               render: (p, r) => {
                 if(r.row.type == '1') {
                   return <div>在线问诊</div>
@@ -51,7 +51,6 @@
                 }
               }
             },
-            // {title: '时间',key: 'addTime'},
             {title: '医生',key: 'doctorName'},
             {title: '状态',key: 'status',
               render: (p, r) => {
@@ -107,5 +106,8 @@
     };
 </script>
 
-<style scoped>
+<style>
+  .Ilst .ivu-table-cell{
+    font-size: 14px!important;
+  }
 </style>

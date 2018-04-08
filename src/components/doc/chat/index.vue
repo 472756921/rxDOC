@@ -106,7 +106,7 @@
     mounted() {
       const h = window.screen.availHeight;
       const c = document.getElementById('ccon');
-      c.style.height = h - 91 + 'px';
+      c.style.height = h - 200 + 'px';
       c.scrollTop = c.scrollHeight;
       setTimeout(()=>{this.sh = c.scrollTop;}, 500)
     },
@@ -309,7 +309,7 @@
   }
   .content{
     overflow: auto;
-    height: 500px;
+    /*height: 500px;*/
     width: 98%;
     margin: 0 auto;
     box-shadow: 0 0 20px #ddd;
