@@ -10,6 +10,7 @@
 
 <script>
   import {loginZuShou, loginDoctor} from '../interface';
+  import {getStaus} from './stand';
 
 export default {
   name: 'HelloWorld',
@@ -17,6 +18,13 @@ export default {
     return {
       animal: '',
     }
+  },
+  created() {
+    //         男    女
+    // 高      3     2
+    // 重      5     4
+    // 头      7     6
+    getStaus(18, 79.5, 3)
   },
   methods: {
     sure() {

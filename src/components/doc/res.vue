@@ -1,6 +1,7 @@
 <template>
   <div>
-    <Table :columns="columns1" :data="data1" @on-row-click="datile"></Table>
+    <!--@on-row-click="datile"-->
+    <Table :columns="columns1" :data="data1"></Table>
     <Page :current="1" :total="total" size="small" style="text-align: center; margin-top: .4rem" @on-change="pageChange"></Page>
     <Modal v-model="closeQ" title="确认关闭" :closable="false" :mask-closable="false" @on-ok="closeQues">
       <p slot="header" style="text-align:center;color: #f60;">结束服务</p>
@@ -11,9 +12,11 @@
 
 <script>
   import {getJZList} from '../../interface';
+  import expandRow from './expand.vue';
 
     export default {
       name: 'res',
+      components: { expandRow },
       created() {
         this.type = sessionStorage.getItem('type');
       },
@@ -25,8 +28,19 @@
           closeQ: false,
           tempID: '',
           columns1: [
-            {title: '宝宝名',key: 'childrenName'},
-            {title: '类型',key: 'type',
+            {
+              type: 'expand',
+              width: 15,
+              render: (h, params) => {
+                return h(expandRow, {
+                  props: {
+                    row: params.row
+                  }
+                })
+              }
+            },
+            {title: '宝宝名',key: 'childrenName', width: 80},
+            {title: '类型',key: 'type',width: 90,
               render: (p, r) => {
                 if(r.row.type == '1') {
                   return <div>在线问诊</div>
@@ -37,7 +51,6 @@
                 }
               }
             },
-            {title: '联系电话',key: 'phone'},
             // {title: '时间',key: 'addTime'},
             {title: '医生',key: 'doctorName'},
             {title: '状态',key: 'status',

@@ -60,11 +60,17 @@ export const overDoctorConsult = () => {
 export const patientEducationSave = () => {
   return host + 'patientEducation/save';
 }
+export const getChildrenById = () => {
+  return host + 'children/getChildrenById?id=';
+}
+export const getChildrenHealthRecordById = () => {
+  return host + 'childrenHealthRecord/getChildrenHealthRecordById?id=';
+}
 export const loginDoctor = () => {
-  return host + 'wechat/loginDoctor';
+  return host + 'doctor/loginDoctor';
 }
 export const loginZuShou = () => {
-  return host + 'wechat/loginZuShou';
+  return host + 'doctor/loginZuShou';
 }
 export const doctorAll = () => {
   return host + 'doctor/doctorAll';

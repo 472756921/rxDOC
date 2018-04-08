@@ -20,7 +20,8 @@
     <div class="option">
       <Input placeholder="请输入内容" v-model="text" style="width: 64%" :maxlength="100"></Input>
       <Button type="info" style="float: right" shape="circle" icon="image" @click="imgSelect" :disabled="isOver"></Button>
-      <Button type="info" style="width: 20%;float: right;margin-right: 10px" @click="send" :disabled="isOver">发送</Button>
+      <Button type="success" style="width: 20%;float: right;margin-right: 10px" @click="send" :disabled="isOver">发送</Button>
+      <Button type="warning" style="width: 100%;margin-top: .4rem" @click="userINFO" >用户信息</Button>
     </div>
     <input type="file" style="display: none" name="file" id="files" @change="imgsend" accept="image/*"/>
 
@@ -70,16 +71,33 @@
       };
     },
     created() {
-      const data = this.$route.query.data;
-      this.title = data.childrenName;
-      this.docID = data.doctorId;
-      this.cid = data.id;
-      if(this.cid == undefined) {
-        this.back();
+      let pd = this.$route.query.data.id;
+      if(pd == undefined){
+        let sd = sessionStorage.getItem('data');
+        const data = JSON.parse(sd);
+        this.title = data.childrenName;
+        this.docID = data.doctorId;
+        this.cid = data.id;
+        if(this.cid == undefined) {
+          this.back();
+        }
+        this.type = this.$route.query.type;
+        this.isOver = data.status=='2'?true:false;
+        this.getData();
+      } else {
+        const data = this.$route.query.data;
+        sessionStorage.setItem('data', JSON.stringify(data));
+        this.title = data.childrenName;
+        this.docID = data.doctorId;
+        this.cid = data.id;
+        if(this.cid == undefined) {
+          this.back();
+        }
+        this.type = this.$route.query.type;
+        this.isOver = data.status=='2'?true:false;
+        this.getData();
       }
-      this.type = this.$route.query.type;
-      this.isOver = data.status=='2'?true:false;
-      this.getData();
+
       window.showIMG = (data) => {
         this.showF = true;
         this.imgSrc = data.src;
@@ -245,6 +263,9 @@
           callback(base64);
         }
       },
+      userINFO(){
+        this.$router.push({path:'/patientdatile/'+this.chat[0].childrenId})
+      },
       getData() {
         this.$ajax({
           method: 'get',
@@ -289,10 +310,10 @@
   .content{
     overflow: auto;
     height: 500px;
-    width: 95%;
+    width: 98%;
     margin: 0 auto;
     box-shadow: 0 0 20px #ddd;
-    background: #f4f4f4;
+    background: #fff;
     padding: .4rem;
     padding-bottom: 1.8rem;
   }

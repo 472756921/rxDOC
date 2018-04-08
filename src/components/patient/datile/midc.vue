@@ -1,6 +1,6 @@
 <template>
     <div>
-      <Table :columns="columns1" :data="data1"></Table>
+      <Table :columns="columns1" :data="data1" @on-row-click="datile"></Table>
       <Page :current="pageN" :total="total" size="small" style="text-align: center; margin-top: .4rem" @on-change="pageChange"></Page>
     </div>
 </template>
@@ -11,9 +11,11 @@
     name: 'midc',
     created() {
       this.getData();
+      this.type = sessionStorage.getItem('type');
     },
     data() {
       return {
+        type: '1',
         pageN: 1,
         total: 1,
         columns1: [
@@ -25,10 +27,12 @@
             title: '状态',
             key: 'status',
             render: (p, r) => {
-              if(r.row.status == 2){
-                return <span>已完成</span>
-              } else {
-                return <span style='color: red'>进行中</span>
+              if(r.row.type == 1){
+                if(r.row.status == 2){
+                  return <span>已完成</span>
+                } else {
+                  return <span style='color: red'>进行中</span>
+                }
               }
             }
           },
@@ -60,6 +64,14 @@
     methods: {
       pageChange(newPage) {
         this.pageN = newPage;
+        this.getData();
+      },
+      datile(row) {
+        if(row.type == 1){
+          this.$router.push({path: '/chat/'+row.id, query: {data: row, type: this.type}});
+        } else if(row.type == null) {
+          this.$router.push({path: '/midcDatile/'+row.id});
+        }
       },
       getData() {
         this.$ajax({

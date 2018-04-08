@@ -8,6 +8,7 @@ import chat from '@/components/doc/chat/index';
 import hjD from '@/components/doc/hj/index';
 
 import patientList from '@/components/patient/index';
+import midcDatile from '@/components/patient/midcDatile';
 import patientdatile from '@/components/patient/datile';
 
 import zone from '@/components/zone/index';
@@ -46,6 +47,11 @@ export default new Router({
       path: '/patientList',
       name: 'patientList',
       component: patientList
+    },
+    {
+      path: '/midcDatile/:id',
+      name: 'midcDatile',
+      component: midcDatile
     },
     {
       path: '/patientdatile/:id',
