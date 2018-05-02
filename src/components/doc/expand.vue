@@ -12,9 +12,12 @@
       <span class="expand-key">主题： </span>
       <span class="expand-value">{{ row.questionName }}</span>
     </Col>
-    <Col span="24">
+    <Col span="12">
       <span class="expand-key">更新时间： </span>
       <span class="expand-value">{{ row.endTime }}</span>
+    </Col>
+    <Col span="12">
+      <span class="expand-key">{{ row.userStatus==0?'有新消息':'' }}</span>
     </Col>
     <Col span="24">
       <Button type="success" size="small" @click="datile(row)">查看详情</Button>

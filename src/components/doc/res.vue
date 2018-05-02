@@ -3,10 +3,6 @@
     <!--@on-row-click="datile"-->
     <Table :columns="columns1" :data="data1" style="font-size: 18px!important;"></Table>
     <Page :current="1" :total="total" size="small" style="text-align: center; margin-top: .4rem" @on-change="pageChange"></Page>
-    <Modal v-model="closeQ" title="确认关闭" :closable="false" :mask-closable="false" @on-ok="closeQues">
-      <p slot="header" style="text-align:center;color: #f60;">结束服务</p>
-      <div>您要结束这条服务吗？</div>
-    </Modal>
   </div>
 </template>
 
@@ -88,20 +84,16 @@
             this.$Message.error('网络掉了，请您稍后');
           });
         },
-        closeQues() {
-
-        },
-        datile(data, index) {
-          if (this.type == 1 && data.status == null) {
-            if(data.type != '1') {
-              this.tempID = data.id;
-              this.closeQ = true;
-            }
-          }
-          if(data.type == '1') {
-            this.$router.push({path: '/chat/'+data.id, query: {data: data, type: this.type}})
-          }
-        },
+        // datile(data, index) {
+        //   if (this.type == 1 && data.status == null) {
+        //     if(data.type != '1') {
+        //       this.tempID = data.id;
+        //     }
+        //   }
+        //   if(data.type == '1') {
+        //     this.$router.push({path: '/chat/'+data.id, query: {data: data, type: this.type}})
+        //   }
+        // },
       },
     };
 </script>
